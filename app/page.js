@@ -1,7 +1,14 @@
+"use client"
+
 import Image from 'next/image'
 import styles from './page.module.css'
+import Link from "next/link";
+import {useAppDispatch, useAppSelector} from "@/redux/hooks";
+import {decrement, increment, reset} from "@/redux/features/counter/counterSlice";
 
 export default function Home() {
+  const count = useAppSelector((state) => state.counterReducer.value)
+  const dispatch = useAppDispatch()
   return (
     <main className={styles.main}>
       <div className={styles.description}>
@@ -37,6 +44,26 @@ export default function Home() {
           height={37}
           priority
         />
+      </div>
+      <div>
+        <ul>
+          <li><Link href={'/books'}>Books</Link></li>
+          <li><Link href={'/subjects'}>Subjects</Link></li>
+          <li><Link href={'/dashboard'}>Dashboard</Link></li>
+        </ul>
+
+        <div style={{ marginBottom: "4rem", textAlign: "center" }}>
+          <h4 style={{ marginBottom: 16 }}>{count}</h4>
+          <button onClick={() => dispatch(increment())}>increment</button>
+          <button
+              onClick={() => dispatch(decrement())}
+              style={{ marginInline: 16 }}
+          >
+            decrement
+          </button>
+          <button onClick={() => dispatch(reset())}>reset</button>
+        </div>
+
       </div>
 
       <div className={styles.grid}>
