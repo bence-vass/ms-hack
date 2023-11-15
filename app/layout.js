@@ -1,8 +1,7 @@
 'use client'
-
 import {Inter} from 'next/font/google'
 import {Providers} from "@/redux/provider";
-import React from 'react';
+import React, {useEffect} from 'react';
 
 const inter = Inter({subsets: ['latin']})
 
@@ -17,6 +16,8 @@ import '@ant-design/cssinjs/lib/';
 import {LaptopOutlined, NotificationOutlined, UserOutlined} from '@ant-design/icons';
 import {Breadcrumb, Layout, Menu, theme, Button} from 'antd';
 import Link from "next/link";
+import {usePathname, useRouter, useSelectedLayoutSegment} from "next/navigation";
+import {AddressBar} from "@/ui/address-bar";
 
 const {Header, Content, Sider} = Layout;
 
@@ -40,12 +41,13 @@ export default function RootLayout({children}) {
     const {
         token: {colorBgContainer},
     } = theme.useToken();
+
     return (
         <html lang="en" style={{height: '100%', margin: 0}}>
         <Providers>
             <body style={{height: '100%', margin: 0}}>
             <Layout style={{
-                height: '100%',
+                minHeight: '100%',
             }}>
                 <Header
                     style={{
@@ -54,9 +56,11 @@ export default function RootLayout({children}) {
                     }}
                 >
                     <div className="demo-logo" style={{color: '#fff'}}>MS Hack</div>
-                    <Menu theme="dark" mode="horizontal">
-                        <Link href={'/'}><Menu.Item key={'home'}>SomeThing1</Menu.Item></Link>
-                        <Link href={'/books'}><Menu.Item key={'books'}>Books</Menu.Item></Link>
+                    <Menu theme="dark" mode="horizontal" defaultSelectedKeys={'home'}>
+                        <Menu.Item key={'home'}><Link href={'/'}>Home</Link></Menu.Item>
+                        <Menu.Item key={'subjects'}><Link href={'/subjects'}>Subjects</Link></Menu.Item>
+                        <Menu.Item key={'books'}><Link href={'/books'}>Books</Link></Menu.Item>
+                        <Menu.Item key={'quiz'}><Link href={'/quiz'}>Quiz</Link></Menu.Item>
                     </Menu>
                 </Header>
                 <Layout>
@@ -82,15 +86,8 @@ export default function RootLayout({children}) {
                             padding: '0 24px 24px',
                         }}
                     >
-                        <Breadcrumb
-                            style={{
-                                margin: '16px 0',
-                            }}
-                        >
-                            <Breadcrumb.Item>Home</Breadcrumb.Item>
-                            <Breadcrumb.Item>List</Breadcrumb.Item>
-                            <Breadcrumb.Item>App</Breadcrumb.Item>
-                        </Breadcrumb>
+                        <AddressBar/>
+
                         <Content
                             style={{
                                 padding: 24,
