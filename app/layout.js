@@ -42,6 +42,7 @@ export default function RootLayout({children}) {
         token: {colorBgContainer},
     } = theme.useToken();
 
+
     return (
         <html lang="en" style={{height: '100%', margin: 0}}>
         <Providers>
@@ -87,7 +88,6 @@ export default function RootLayout({children}) {
                         }}
                     >
                         <AddressBar/>
-
                         <Content
                             style={{
                                 padding: 24,
