@@ -19,7 +19,7 @@ function loadWebgazerScript(setState) {
 }
 
 
-async function waitForWebgazerModel(){
+async function waitForWebgazerModel() {
     /*const n= 10
     let ready = false
     for(let i=1; i <= n; i++){
@@ -36,57 +36,81 @@ async function waitForWebgazerModel(){
     await window.webgazer.getCurrentPrediction().teh
 }
 
-function setPrediction(){
+async function setPrediction() {
+    const attempts = 10
+    let ready = false
+    console.log(window.webgazer)
 
 }
 
 
-
-
 function Page({params}) {
     const chapter = params.id || 'No chapter selected'
-    const [webgazerLoaded, setWebgazerLoaded] = useState(false)
+    const [webgazerScriptLoaded, setWebgazerScriptLoaded] = useState(false)
+    const [webgazerReady, setWebgazerReady] = useState(false)
     const [webgazerPause, setWebgazerPause] = useState(false)
-    useEffect( () => {
+    const [coords, setCoords] = useState({x: null, y: null})
+
+
+    useEffect(() => {
         window.saveDataAcrossSessions = true
-        loadWebgazerScript(setWebgazerLoaded)
+        loadWebgazerScript(setWebgazerScriptLoaded)
 
 
     }, []);
 
 
-    useEffect( () => {
-        if(webgazerLoaded){
+    useEffect(() => {
+        if (webgazerScriptLoaded) {
             console.log('webgazer loaded')
             console.log(window.webgazer)
-            window.webgazer.begin()
-            console.log('loaded model')
-            setPrediction()
+            //window.webgazer.setRegression("weightedRidge")
+            window.webgazer.setRegression("ridge")
+            window.webgazer.begin().then(res => {
+                console.log('begin')
+                setWebgazerReady(true)
+            })
+            window.webgazer.showVideoPreview(false)
+            //window.webgazer.applyKalmanFilter(true)
+            window.webgazer.showPredictionPoints(false)
+
         }
 
 
         return () => {
             console.log('will unmount')
-            if(webgazerLoaded){
+            if (webgazerScriptLoaded) {
                 console.log('stop webgazer')
                 window.webgazer.end()
                 window.webgazer.stopVideo()
             }
         }
 
-    }, [webgazerLoaded]);
+    }, [webgazerScriptLoaded]);
 
     useEffect(() => {
-        console.log('webgazer Ready efect')
+        if (webgazerReady && !webgazerPause) {
+            const interval = setInterval(() => {
+                window.webgazer.getCurrentPrediction().then(res => {
+                    if(res.x && res.y){
+                        setCoords({x: res.x, y: res.y})
+                    }
+                })
+            }, 250)
+            return () => {
+                clearInterval(interval)
+            }
+        }
+    }, [webgazerReady, webgazerPause]);
 
-    }, []);
 
-    function pauseResume(){
-        if(webgazerLoaded){
-            console.log('switch')
-            if(webgazerPause){
+    function pauseResume() {
+        if (webgazerScriptLoaded) {
+            if (webgazerPause) {
+                console.log('webgazer resume')
                 window.webgazer.resume()
             } else {
+                console.log('webgazer pause')
                 window.webgazer.pause()
             }
             setWebgazerPause(!webgazerPause)
@@ -95,11 +119,9 @@ function Page({params}) {
 
     return (
         <div>
+            <EyeTrackingCursor coords={coords} pause={webgazerPause}/>
             <h3>Chapter {chapter}</h3>
-            <h3>Chapter {chapter}</h3>
-            <h3>Chapter {chapter}</h3>
-            <h3>Chapter {chapter}</h3>
-            <h3>Chapter {chapter}</h3>
+            <h2>{webgazerReady ? 'Ready' : 'Loading...'}</h2>
             <button onClick={pauseResume}>{webgazerPause ? 'Resume' : 'Pause'}</button>
         </div>
     );
@@ -108,9 +130,32 @@ function Page({params}) {
 export default Page;
 
 
-function GazerWrapper({children}) {
-    if (typeof window !== 'undefined') {
-        return <>{children}</>
+function EyeTrackingCursor({coords, pause}) {
+
+    const dotStyle = {
+        width: 10,
+        height: 10,
+        borderRadius: '50%',
+        backgroundColor: 'red',
+        position: 'absolute',
     }
-    return null
+    if (pause || (coords.x == null && coords.y == null)) {
+        return null
+    } else {
+        return <div style={{
+            width: '100vw',
+            height: '100vh',
+            position: "absolute",
+            top: 0,
+            left: 0,
+            overflow: "hidden",
+            pointerEvents: 'none'
+        }}>
+            <div style={{
+                ...dotStyle,
+                top: coords.y || 0,
+                left: coords.x || 0,
+            }}></div>
+        </div>
+    }
 }

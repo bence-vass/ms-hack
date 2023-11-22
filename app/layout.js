@@ -57,11 +57,14 @@ export default function RootLayout({children}) {
                     }}
                 >
                     <div className="demo-logo" style={{color: '#fff'}}>MS Hack</div>
-                    <Menu theme="dark" mode="horizontal" defaultSelectedKeys={'home'}>
+                    <Menu theme="dark" mode="horizontal" defaultSelectedKeys={'home'} style={{
+                        minWidth: 800,
+                    }}>
                         <Menu.Item key={'home'}><Link href={'/'}>Home</Link></Menu.Item>
                         <Menu.Item key={'subjects'}><Link href={'/subjects'}>Subjects</Link></Menu.Item>
                         <Menu.Item key={'books'}><Link href={'/books'}>Books</Link></Menu.Item>
                         <Menu.Item key={'quiz'}><Link href={'/quiz'}>Quiz</Link></Menu.Item>
+                        <Menu.Item key={'teaching'}><Link href={'/subjects/math/chapter/ch1'}>Teaching Demo</Link></Menu.Item>
                     </Menu>
                 </Header>
                 <Layout>
