@@ -18,7 +18,7 @@ function Page(props) {
         },
         {
             type: 'multiple_choice',
-            question: 'f(x) = 2*x and x = 4',
+            question: 'f(x) = xx and x = 4',
             answers: ['2', '4', '6', '8', '10'],
             correct: 4,
             hint: '2 * 4',
@@ -35,7 +35,7 @@ function Page(props) {
         {
             type: 'checking',
             question: 'x^2 = 4',
-            answers: ['-1', '-2', '-3', '2'],
+            answers: ['-1', '-2', '-3', '2', '11'],
             correct: [1, 3],
             desc: 'guessing',
             status: 'error'
