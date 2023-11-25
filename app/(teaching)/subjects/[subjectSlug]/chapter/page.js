@@ -1,9 +1,14 @@
 import React from 'react';
 
 function Page(props) {
+
     return (
-        <div>Select a chapter</div>
+        <div>
+            <h1>Select a chapter</h1>
+        </div>
     );
 }
+
+
 
 export default Page;
