@@ -103,7 +103,7 @@ function QuestionSwitch({question}) {
                     <Radio.Group>
                         {question.answers.map((e, i) => {
                             return (
-                                <Radio value={i}>{e}</Radio>
+                                <Radio value={i} key={i}>{e}</Radio>
                             )
                         })}
                     </Radio.Group>
@@ -117,7 +117,7 @@ function QuestionSwitch({question}) {
                     <Checkbox.Group>
                         {question.answers.map((e, i) => {
                             return (
-                                <Checkbox value={i}>{e}</Checkbox>
+                                <Checkbox value={i} key={i}>{e}</Checkbox>
                             )
                         })}
                     </Checkbox.Group>
