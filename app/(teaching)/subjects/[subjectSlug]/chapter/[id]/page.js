@@ -1,7 +1,9 @@
 'use client'
 import React, {useEffect, useLayoutEffect, useRef, useState} from 'react';
 import EyeTrackingCursor from "@/app/(teaching)/subjects/[subjectSlug]/chapter/[id]/eyetracking";
-import HeatmapComponent, {cleanHeatmap} from "@/app/(teaching)/subjects/[subjectSlug]/chapter/[id]/heatmap";
+import HeatmapComponent from "@/app/(teaching)/subjects/[subjectSlug]/chapter/[id]/heatmap";
+import {useAppDispatch, useAppSelector} from "@/redux/hooks";
+import {resetData} from "@/redux/features/heatmap/heatmapSlice";
 
 
 function loadWebgazerScript(setState) {
@@ -97,10 +99,12 @@ function Page({params}) {
         }
     }
 
-    const heatmapRef = useRef();
+
+    const dispatch = useAppDispatch()
+
     return (
         <div>
-            <HeatmapComponent newDataPoints={coords} ref={heatmapRef}/>
+            <HeatmapComponent newDataPoints={coords}/>
 
 
             <EyeTrackingCursor coords={coords} pause={webgazerPause}/>
@@ -109,7 +113,7 @@ function Page({params}) {
             <h2>{webgazerReady ? 'Ready' : 'Loading...'}</h2>
             <button onClick={pauseResume}>{webgazerPause ? 'Resume' : 'Pause'}</button>
 
-            <button onClick={() => heatmapRef.current.cleanHeatmap()}>Clean heatmap</button>
+            <button onClick={() => dispatch(resetData())}>Clean heatmap</button>
 
         </div>
     );

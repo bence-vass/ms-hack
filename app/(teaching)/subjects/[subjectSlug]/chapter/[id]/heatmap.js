@@ -1,7 +1,7 @@
 import React, {useEffect, useState, forwardRef, useImperativeHandle} from "react";
 import h337 from "heatmap.js";
 import {useAppDispatch, useAppSelector} from "@/redux/hooks";
-import {setData } from "@/redux/features/heatmap/heatmapSlice";
+import {resetData, setData} from "@/redux/features/heatmap/heatmapSlice";
 
 
 
@@ -11,17 +11,7 @@ const HeatmapComponent = ({newDataPoints}) => {
 
     const [heatmapInstance, setHeatmapInstance] = useState(null)
 
-    function cleanHeatmap() {
-        console.log('clean heatmap')
-        if(heatmapInstance){
-            console.log('clean')
-            heatmapInstance.setData({max: 0, data: []})
-        }
-    }
-
-
     useEffect(() => {
-
         const heatmapInstance = h337.create({
             container: document.getElementById('heatmapContainer'),
             radius: 100,
@@ -29,6 +19,16 @@ const HeatmapComponent = ({newDataPoints}) => {
         })
         setHeatmapInstance(heatmapInstance)
     }, []);
+
+
+    // redux store used only for basic js types
+    const toResetHeatmap = useAppSelector(state => state.heatmapReducer.toReset)
+    useEffect(() => {
+        if(toResetHeatmap){
+            dispatch(resetData())
+            heatmapInstance.setData({max: 0, data: []})
+        }
+    }, [toResetHeatmap]);
 
 
 
@@ -41,14 +41,9 @@ const HeatmapComponent = ({newDataPoints}) => {
                 value: 1,
             })
             dispatch(setData(heatmapInstance.getData()))
-            console.log(heatmapData)
         }
     }, [newDataPoints]);
 
-
-    useEffect(() => {
-        console.log('change')
-    }, [heatmapData]);
 
     return (<div style={{
         position: 'absolute !important',

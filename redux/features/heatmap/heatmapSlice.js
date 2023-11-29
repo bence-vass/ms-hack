@@ -2,9 +2,8 @@ import {createSlice} from "@reduxjs/toolkit";
 
 
 const initialState = {
-    isInstance: false,
     data: {max: 0, data: []},
-    reset: false,
+    toReset: false,
 }
 
 export const heatmap = createSlice({
@@ -19,7 +18,7 @@ export const heatmap = createSlice({
             state.data = action.payload
         },
         resetData: (state, action) => {
-            state.data = {max: 0, data: []}
+            state.toReset = !state.toReset
         }
 
 
