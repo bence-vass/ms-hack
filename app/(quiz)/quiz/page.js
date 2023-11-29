@@ -3,13 +3,10 @@ import React from 'react';
 import {Button, Checkbox, Col, InputNumber, Radio, Row, Steps} from "antd";
 import {useAppDispatch, useAppSelector} from "@/redux/hooks";
 import {setCurrentQuestion} from "@/redux/features/quiz/quizSlice";
-import QuestionSwitch from "@/ui/question-switch";
 import {quiz} from "@/app/(quiz)/quiz/dummy_quiz";
-
+import QuestionSwitch from "@/ui/question-switch";
 
 function Page(props) {
-
-
 
     let stepsItems = quiz.map((e, i) => {
         return {
@@ -53,7 +50,6 @@ function Page(props) {
         </div>
     );
 }
-
 
 
 export default Page;
