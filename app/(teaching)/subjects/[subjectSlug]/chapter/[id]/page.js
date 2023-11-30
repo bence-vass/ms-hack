@@ -1,5 +1,7 @@
 'use client'
-import React, {useEffect, useLayoutEffect, useState} from 'react';
+import React, {useEffect, useLayoutEffect, useRef, useState} from 'react';
+import EyeTrackingCursor from "@/app/(teaching)/subjects/[subjectSlug]/chapter/[id]/eyetracking";
+import HeatmapComponent, {cleanHeatmap} from "@/app/(teaching)/subjects/[subjectSlug]/chapter/[id]/heatmap";
 
 
 function loadWebgazerScript(setState) {
@@ -19,38 +21,12 @@ function loadWebgazerScript(setState) {
 }
 
 
-async function waitForWebgazerModel() {
-    /*const n= 10
-    let ready = false
-    for(let i=1; i <= n; i++){
-        if(ready){
-            break
-        }
-        await new Promise(res => setTimeout(res, 1500 * (1 + (i/n))))
-        console.log(i, ' sec')
-        window.webgazer.getCurrentPrediction().then(res => {
-            console.log(res)
-            ready = true
-        })
-    }*/
-    await window.webgazer.getCurrentPrediction().teh
-}
-
-async function setPrediction() {
-    const attempts = 10
-    let ready = false
-    console.log(window.webgazer)
-
-}
-
-
 function Page({params}) {
     const chapter = params.id || 'No chapter selected'
     const [webgazerScriptLoaded, setWebgazerScriptLoaded] = useState(false)
     const [webgazerReady, setWebgazerReady] = useState(false)
     const [webgazerPause, setWebgazerPause] = useState(false)
     const [coords, setCoords] = useState({x: null, y: null})
-
 
     useEffect(() => {
         window.saveDataAcrossSessions = true
@@ -59,20 +35,19 @@ function Page({params}) {
 
     }, []);
 
-
     useEffect(() => {
         if (webgazerScriptLoaded) {
             console.log('webgazer loaded')
             console.log(window.webgazer)
+            window.webgazer.showVideoPreview(false)
+            window.webgazer.showPredictionPoints(false)
+            //window.webgazer.applyKalmanFilter(false)
             //window.webgazer.setRegression("weightedRidge")
-            window.webgazer.setRegression("ridge")
             window.webgazer.begin().then(res => {
                 console.log('begin')
                 setWebgazerReady(true)
             })
-            window.webgazer.showVideoPreview(false)
-            //window.webgazer.applyKalmanFilter(true)
-            window.webgazer.showPredictionPoints(false)
+
 
         }
 
@@ -81,6 +56,7 @@ function Page({params}) {
             console.log('will unmount')
             if (webgazerScriptLoaded) {
                 console.log('stop webgazer')
+                window.webgazer.pause()
                 window.webgazer.end()
                 window.webgazer.stopVideo()
             }
@@ -92,11 +68,15 @@ function Page({params}) {
         if (webgazerReady && !webgazerPause) {
             const interval = setInterval(() => {
                 window.webgazer.getCurrentPrediction().then(res => {
-                    if(res.x && res.y){
-                        setCoords({x: res.x, y: res.y})
+                    if (res.x && res.y) {
+                        const roundUpTo = 50
+                        setCoords({
+                            x: Math.ceil(res.x / roundUpTo) * roundUpTo,
+                            y: Math.ceil(res.y / roundUpTo) * roundUpTo
+                        })
                     }
                 })
-            }, 250)
+            }, 200)
             return () => {
                 clearInterval(interval)
             }
@@ -117,45 +97,23 @@ function Page({params}) {
         }
     }
 
+    const heatmapRef = useRef();
     return (
         <div>
+            <HeatmapComponent newDataPoints={coords} ref={heatmapRef}/>
+
+
             <EyeTrackingCursor coords={coords} pause={webgazerPause}/>
+
             <h3>Chapter {chapter}</h3>
             <h2>{webgazerReady ? 'Ready' : 'Loading...'}</h2>
             <button onClick={pauseResume}>{webgazerPause ? 'Resume' : 'Pause'}</button>
+
+            <button onClick={() => heatmapRef.current.cleanHeatmap()}>Clean heatmap</button>
+
         </div>
     );
 }
 
 export default Page;
 
-
-function EyeTrackingCursor({coords, pause}) {
-
-    const dotStyle = {
-        width: 10,
-        height: 10,
-        borderRadius: '50%',
-        backgroundColor: 'red',
-        position: 'absolute',
-    }
-    if (pause || (coords.x == null && coords.y == null)) {
-        return null
-    } else {
-        return <div style={{
-            width: '100vw',
-            height: '100vh',
-            position: "absolute",
-            top: 0,
-            left: 0,
-            overflow: "hidden",
-            pointerEvents: 'none'
-        }}>
-            <div style={{
-                ...dotStyle,
-                top: coords.y || 0,
-                left: coords.x || 0,
-            }}></div>
-        </div>
-    }
-}
