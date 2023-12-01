@@ -16,6 +16,7 @@ const HeatmapComponent = ({newDataPoints}) => {
             container: document.getElementById('heatmapContainer'),
             radius: 100,
             opacity: .3,
+            blur: .7,
         })
         setHeatmapInstance(heatmapInstance)
     }, []);
