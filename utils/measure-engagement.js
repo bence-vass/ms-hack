@@ -3,7 +3,7 @@ let cache_xs = []
 let cache_ys = []
 
 
-function cleanCache() {
+export function cleanCache() {
     cache_xs = []
     cache_ys = []
 }
@@ -24,6 +24,10 @@ function calcMean(arr) {
 }
 
 function meanPosition() {
+    /*
+    * calculates the mean of the cached values cache_xs and cache_ys
+    * does not require any args but cacheData() fn must be called manually
+    */
     return {
         x: calcMean(cache_xs),
         y: calcMean(cache_ys)
@@ -71,22 +75,60 @@ function weightedMeanPosition(weights = null) {
 }
 
 
-function meanInducedMomentum(){
+function meanInducedMomentum() {
     const m = meanPosition()
     const mw = weightedMeanPosition()
-    return{
+    return {
         x: mw.x - m.x,
         y: mw.y - m.y
     }
 }
 
+
+function predictFocusObject(environment) {
+    const meanPos = weightedMeanPosition()
+    for (let i = 0; i < environment.length; i++) {
+        const rect = environment[i].rect
+        if (
+            rect.bottom >= meanPos.y && meanPos.y >= rect.top &&
+            rect.left <= meanPos.x && meanPos.x <= rect.right
+        ) {
+            return [environment[i].id, environment[i].type]
+        }
+    }
+
+    return [null, null]
+}
+
+let storeFocusId = {}
+let storeFocusType = {}
+
+function storeFocusObject(currentFocus, storeFocus = storeFocusId) {
+    if (currentFocus in storeFocus) {
+        storeFocus[currentFocus] += 1
+    } else {
+        storeFocus[currentFocus] = 1
+    }
+}
+
+export function cleanFocusStore() {
+    storeFocusId = {}
+    storeFocusType = {}
+}
+
+
 export function measureEngagement(environment, userInputs, profile = defaultProfile,) {
 
     //console.log(userInputs, environment)
     cacheData(userInputs)
+    //console.log(environment)
+    const [currentFocusId, currentFocusType] = predictFocusObject(environment)
+    storeFocusObject(currentFocusId)
+    console.log(storeFocusId)
+    storeFocusObject(currentFocusType, storeFocusType)
+    console.log(storeFocusType)
     //console.log(cache_xs)
-
-    console.log(meanInducedMomentum())
+    //console.log(meanInducedMomentum())
 }
 
 
