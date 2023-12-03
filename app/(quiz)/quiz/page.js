@@ -3,7 +3,8 @@ import React from 'react';
 import {Button, Checkbox, Col, InputNumber, Radio, Row, Steps} from "antd";
 import {useAppDispatch, useAppSelector} from "@/redux/hooks";
 import {setCurrentQuestion} from "@/redux/features/quiz/quizSlice";
-
+import {quiz} from "@/app/(quiz)/quiz/dummy_quiz";
+import QuestionSwitch from "@/ui/question-switch";
 
 function Page(props) {
 
@@ -18,7 +19,7 @@ function Page(props) {
         },
         {
             type: 'multiple_choice',
-            question: 'f(x) = xx and x = 4',
+            question: 'f(x) = 2*x and x = 4',
             answers: ['2', '4', '6', '8', '10'],
             correct: 4,
             hint: '2 * 4',
@@ -35,7 +36,7 @@ function Page(props) {
         {
             type: 'checking',
             question: 'x^2 = 4',
-            answers: ['-1', '-2', '-3', '2', '11'],
+            answers: ['-1', '-2', '-3', '2'],
             correct: [1, 3],
             desc: 'guessing',
             status: 'error'
@@ -83,55 +84,6 @@ function Page(props) {
                     </Button>
                 </Col>
             </Row>
-        </div>
-    );
-}
-
-
-function QuestionSwitch({question}) {
-    function questionOptions(question) {
-        switch (question.type) {
-            case 'true_or_false':
-                return (
-                    <Radio.Group>
-                        <Radio value={true}>True</Radio>
-                        <Radio value={false}>False</Radio>
-                    </Radio.Group>
-                )
-            case 'multiple_choice':
-                return (
-                    <Radio.Group>
-                        {question.answers.map((e, i) => {
-                            return (
-                                <Radio value={i} key={i}>{e}</Radio>
-                            )
-                        })}
-                    </Radio.Group>
-                )
-            case 'numeric':
-                return (
-                    <InputNumber size={"large"}/>
-                )
-            case 'checking':
-                return (
-                    <Checkbox.Group>
-                        {question.answers.map((e, i) => {
-                            return (
-                                <Checkbox value={i} key={i}>{e}</Checkbox>
-                            )
-                        })}
-                    </Checkbox.Group>
-                )
-            default:
-                return null
-        }
-    }
-
-
-    return (
-        <div>
-            <h3>Question: {question.question} ?</h3>
-            {questionOptions(question)}
         </div>
     );
 }
