@@ -47,7 +47,6 @@ const HeatmapComponent = ({newDataPoints}) => {
 
 
     return (<div style={{
-        position: 'absolute !important',
         width: '100vw',
         height: '100vh',
         top: 0,
@@ -55,6 +54,8 @@ const HeatmapComponent = ({newDataPoints}) => {
         overflow: "hidden",
         pointerEvents: 'none',
         zIndex: 999,
+        position: 'absolute',
+
     }}>
         <div id={'heatmapContainer'} style={{width: '100%', height: '100%'}}></div>
     </div>)

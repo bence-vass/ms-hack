@@ -20,7 +20,7 @@ function Page({params}) {
                         <ul>
                             {topic.subtopics.map((sub, j) => {
                                 return (<li key={i.toString() + "-" + j.toString()}>
-                                    <CustomLink active={sub.active} href={current_path + '/' + sub.slug}>
+                                    <CustomLink active={sub.active} href={current_path + '/chapter/' + sub.slug}>
                                         {sub.title}
                                     </CustomLink>
                                 </li>)

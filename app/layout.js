@@ -98,6 +98,7 @@ export default function RootLayout({children}) {
                                 margin: 0,
                                 minHeight: 280,
                                 background: colorBgContainer,
+                                overflow: 'hidden'
                             }}
                         >
                             {children}
