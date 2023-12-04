@@ -65,6 +65,7 @@ export default function RootLayout({children}) {
                         <Menu.Item key={'books'}><Link href={'/books'}>Books</Link></Menu.Item>
                         <Menu.Item key={'quiz'}><Link href={'/quiz'}>Quiz</Link></Menu.Item>
                         <Menu.Item key={'teaching'}><Link href={'/subjects/math/chapter/ch1'}>Teaching Demo</Link></Menu.Item>
+                        <Menu.Item key={'showcase-1'}><Link href={'/showcase/engagement-analytics'}>engagement analytics</Link></Menu.Item>
                     </Menu>
                 </Header>
                 <Layout>

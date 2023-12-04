@@ -16,6 +16,7 @@ const HeatmapComponent = ({newDataPoints}) => {
             container: document.getElementById('heatmapContainer'),
             radius: 100,
             opacity: .3,
+            blur: .7,
         })
         setHeatmapInstance(heatmapInstance)
     }, []);
@@ -53,6 +54,7 @@ const HeatmapComponent = ({newDataPoints}) => {
         left: 0,
         overflow: "hidden",
         pointerEvents: 'none',
+        zIndex: 999,
     }}>
         <div id={'heatmapContainer'} style={{width: '100%', height: '100%'}}></div>
     </div>)
