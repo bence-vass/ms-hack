@@ -4,6 +4,9 @@ import EyeTrackingCursor from "@/app/(teaching)/subjects/[subjectSlug]/chapter/[
 import HeatmapComponent from "@/app/(teaching)/subjects/[subjectSlug]/chapter/[id]/heatmap";
 import {useAppDispatch, useAppSelector} from "@/redux/hooks";
 import {resetData} from "@/redux/features/heatmap/heatmapSlice";
+import {error} from "next/dist/build/output/log";
+import {checkIsCamApproved, requestCamApprove} from "@/ui/webcam-permission";
+import {Modal} from "antd";
 
 
 function loadWebgazerScript(setState) {
@@ -24,16 +27,28 @@ function loadWebgazerScript(setState) {
 
 
 function Page({params}) {
+    const dispatch = useAppDispatch()
+
     const chapter = params.id || 'No chapter selected'
     const [webgazerScriptLoaded, setWebgazerScriptLoaded] = useState(false)
+    const [camApproved, setCamApproved] = useState(false)
     const [webgazerReady, setWebgazerReady] = useState(false)
     const [webgazerPause, setWebgazerPause] = useState(false)
     const [coords, setCoords] = useState({x: null, y: null})
+    const [toggleHeatmap, setToggleHeatmap] = useState(false)
+    const [toogleEyeTrackingCursor, setToogleEyeTrackingCursor] = useState(false)
 
     useEffect(() => {
         window.saveDataAcrossSessions = true
         loadWebgazerScript(setWebgazerScriptLoaded)
+        checkIsCamApproved().then(res => {
+            if (res) {
+                setCamApproved(res)
 
+            } else {
+                setModalIsOpen(true)
+            }
+        })
 
     }, []);
 
@@ -48,6 +63,8 @@ function Page({params}) {
             window.webgazer.begin().then(res => {
                 console.log('begin')
                 setWebgazerReady(true)
+            }).catch(error => {
+                console.log(error)
             })
 
 
@@ -88,6 +105,7 @@ function Page({params}) {
 
     function pauseResume() {
         if (webgazerScriptLoaded) {
+            console.log(window.webgazer.isReady())
             if (webgazerPause) {
                 console.log('webgazer resume')
                 window.webgazer.resume()
@@ -99,25 +117,48 @@ function Page({params}) {
         }
     }
 
+    const [modalIsOpen, setModalIsOpen] = useState(false)
 
-    const dispatch = useAppDispatch()
+    function modalHandleOk() {
+        setModalIsOpen(false)
+    }
+
+    function modalHandleCancel() {
+        setModalIsOpen(false)
+    }
 
     return (
         <div>
-            <HeatmapComponent newDataPoints={coords}/>
-
-
-            <EyeTrackingCursor coords={coords} pause={webgazerPause}/>
+            <CamWarningModal isOpen={modalIsOpen} onOkFn={modalHandleOk} onCancelFn={modalHandleCancel}/>
+            {toggleHeatmap ? <HeatmapComponent newDataPoints={coords}/> : null}
+            {toogleEyeTrackingCursor ? <EyeTrackingCursor coords={coords} pause={webgazerPause}/> : null}
 
             <h3>Chapter {chapter}</h3>
             <h2>{webgazerReady ? 'Ready' : 'Loading...'}</h2>
             <button onClick={pauseResume}>{webgazerPause ? 'Resume' : 'Pause'}</button>
-
             <button onClick={() => dispatch(resetData())}>Clean heatmap</button>
-
+            <button onClick={() => checkIsCamApproved().then(res => {
+                console.log('Cam permission: ', res)
+                if (res) {
+                    setCamApproved(true)
+                } else {
+                    setModalIsOpen(true)
+                }
+            })}>check
+            </button>
+            <button onClick={() => requestCamApprove()}>request</button>
+            <button onClick={() => setToggleHeatmap(prev => !prev)}>Heatmap</button>
+            <button onClick={() => setToogleEyeTrackingCursor(prev => !prev)}>Gaze</button>
         </div>
     );
 }
 
 export default Page;
 
+function CamWarningModal({isOpen, onOkFn, onCancelFn}) {
+
+    return (<Modal title={'No cam waring'} open={isOpen} onOk={onOkFn} onCancel={onCancelFn}>
+        <p>No cam permission</p>
+
+    </Modal>)
+}
