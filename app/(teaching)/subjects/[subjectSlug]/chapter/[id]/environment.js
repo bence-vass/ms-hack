@@ -38,10 +38,10 @@ const SubtitleDiv = styled.div`
 const subtitleWindows = slicingWindows(subtitle, 5)
 
 
-function Environment({isFlip, isSubtitle}) {
+function Environment({isFlip, isSubtitle, domEnv=useRef(null)}) {
     let i = 0
 
-    const domEnv = useRef(null)
+    //const domEnv = useRef(null)
 
     const [subCoords, setSubCoords] = useState({x: 0, y: 0})
     const [currentSub, setCurrentSub] = useState('Some subscript')
@@ -63,8 +63,6 @@ function Environment({isFlip, isSubtitle}) {
     }
 
     useEffect(() => {
-
-
 
         setCurrentSubjectVideoSrc(getNextVideo(overflow_videos))
         setCurrentOverflowVideoSrc(getNextVideo(overflow_videos))

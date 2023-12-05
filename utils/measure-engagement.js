@@ -118,13 +118,14 @@ export function cleanFocusStore() {
 
 let sub = false
 function reactionHandler(focusTypes, resetAfter = 250) {
+
     let cmds = []
     const numSubject = focusTypes['subject'] || 0
     const totalNum = Object.values(focusTypes).reduce((p, c) => p + c) || 0
     const ration = numSubject / totalNum
-    //console.log(ration)
-    if (ration < .6 && totalNum >= resetAfter * .4) {
-        if (ration < .3) {
+    console.log(ration)
+    if (ration < .65 && totalNum >= resetAfter * .4) {
+        if (ration < .25) {
             cmds.push('flip')
             cmds.push('clean')
             cleanFocusStore()
@@ -152,7 +153,7 @@ export function measureEngagement(environment, userInputs, profile = defaultProf
     storeFocusObject(currentFocusId)
     storeFocusObject(currentFocusType, storeFocusType)
     //console.log(storeFocusId)
-    //console.log(storeFocusType)
+    console.log(storeFocusType)
 
     let actions = reactionHandler(storeFocusType, resetAfter)
 
