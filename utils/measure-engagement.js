@@ -93,11 +93,11 @@ function predictFocusObject(environment) {
             rect.bottom >= meanPos.y && meanPos.y >= rect.top &&
             rect.left <= meanPos.x && meanPos.x <= rect.right
         ) {
-            return [environment[i].id, environment[i].type]
+            return [environment[i].id, environment[i].type || "empty"]
         }
     }
 
-    return [null, null]
+    return [null, 'empty']
 }
 
 let storeFocusId = {}
@@ -116,19 +116,48 @@ export function cleanFocusStore() {
     storeFocusType = {}
 }
 
+let sub = false
+function reactionHandler(focusTypes, resetAfter = 250) {
 
-export function measureEngagement(environment, userInputs, profile = defaultProfile,) {
+    let cmds = []
+    const numSubject = focusTypes['subject'] || 0
+    const totalNum = Object.values(focusTypes).reduce((p, c) => p + c) || 0
+    const ration = numSubject / totalNum
+    console.log(ration)
+    if (ration < .65 && totalNum >= resetAfter * .4) {
+        if (ration < .25) {
+            cmds.push('flip')
+            cmds.push('clean')
+            cleanFocusStore()
+            sub = false
+        } else {
+            if(!sub){
+                cmds.push('subtitle')
+                sub = true
+            }
+        }
+    }
 
-    //console.log(userInputs, environment)
+
+    if (totalNum >= resetAfter) {
+        cleanFocusStore()
+        cmds.push('clean')
+        sub = false
+    }
+    return cmds
+}
+
+export function measureEngagement(environment, userInputs, profile = defaultProfile, resetAfter = 250) {
     cacheData(userInputs)
-    //console.log(environment)
     const [currentFocusId, currentFocusType] = predictFocusObject(environment)
     storeFocusObject(currentFocusId)
-    console.log(storeFocusId)
     storeFocusObject(currentFocusType, storeFocusType)
+    //console.log(storeFocusId)
     console.log(storeFocusType)
-    //console.log(cache_xs)
-    //console.log(meanInducedMomentum())
+
+    let actions = reactionHandler(storeFocusType, resetAfter)
+
+    return [currentFocusId, currentFocusType, storeFocusId, storeFocusType, actions]
 }
 
 

@@ -6,10 +6,21 @@ import {useAppDispatch, useAppSelector} from "@/redux/hooks";
 import {resetData} from "@/redux/features/heatmap/heatmapSlice";
 import {error} from "next/dist/build/output/log";
 import {checkIsCamApproved, requestCamApprove} from "@/ui/webcam-permission";
-import {Modal, Spin} from "antd";
-import {SpinContainer} from "@/app/(teaching)/subjects/[subjectSlug]/chapter/[id]/custom-styled-components";
-import {LoadingOutlined} from "@ant-design/icons";
+import {FloatButton, Modal, Spin} from "antd";
+import {
+    FloatingControl,
+    SpinContainer
+} from "@/app/(teaching)/subjects/[subjectSlug]/chapter/[id]/custom-styled-components";
+import {
+    AlignCenterOutlined, ClearOutlined, ExperimentFilled,
+    ExperimentOutlined, EyeFilled,
+    EyeOutlined, HeatMapOutlined,
+    InteractionOutlined,
+    LoadingOutlined,
+    SwapOutlined
+} from "@ant-design/icons";
 import Environment from "@/app/(teaching)/subjects/[subjectSlug]/chapter/[id]/environment";
+import {measureEngagement} from "@/utils/measure-engagement";
 
 
 function loadWebgazerScript(setState) {
@@ -40,6 +51,11 @@ function Page({params}) {
     const [coords, setCoords] = useState({x: null, y: null})
     const [toggleHeatmap, setToggleHeatmap] = useState(false)
     const [toogleEyeTrackingCursor, setToogleEyeTrackingCursor] = useState(false)
+
+
+    const [isSubtitle, setIsSubtitle] = useState(false)
+    const [isFlip, setIsFlip] = useState(false)
+
 
     useEffect(() => {
         window.saveDataAcrossSessions = true
@@ -88,7 +104,12 @@ function Page({params}) {
     }, [webgazerScriptLoaded]);
 
     useEffect(() => {
+
+
+
         if (webgazerReady && !webgazerPause) {
+            const envDesc = describeEnvironment(envRefParent)
+
             const interval = setInterval(() => {
                 window.webgazer.getCurrentPrediction().then(res => {
                     if (res.x && res.y) {
@@ -97,6 +118,8 @@ function Page({params}) {
                             x: Math.ceil(res.x / roundUpTo) * roundUpTo,
                             y: Math.ceil(res.y / roundUpTo) * roundUpTo
                         })
+
+                        actionHandler(envDesc, {x: res.x, y: res.y})
                     }
                 })
             }, 200)
@@ -105,6 +128,50 @@ function Page({params}) {
             }
         }
     }, [webgazerReady, webgazerPause]);
+
+
+    const envRefParent = useRef(null)
+    function actionHandler(env, userInput) {
+        let actions
+        [, , , , actions] = measureEngagement(
+            env,
+            {x: userInput.x, y: userInput.y},
+            {},
+            60
+        )
+
+        if (actions.length !== 0) {
+            for (let action of actions) {
+                console.log(action)
+                if (action === 'clean') {
+                    dispatch(resetData())
+                } else if (action === 'flip') {
+                    setIsFlip(prev => !prev)
+
+                } else if (action === 'subtitle') {
+                    setIsSubtitle(prev => !prev)
+                }
+            }
+        }
+    }
+
+
+    function describeEnvironment(element) {
+        return Object.values(element.current.children).map((v, i) => {
+            const rect = v.getBoundingClientRect()
+            let type = null
+            if (v.id === 'overflow') {
+                type = 'overflow'
+            } else if (v.id === 'subject') {
+                type = 'subject'
+            }
+            return {
+                id: v.id,
+                type: type,
+                rect
+            }
+        })
+    }
 
 
     function pauseResume() {
@@ -158,30 +225,79 @@ function Page({params}) {
             display: 'flex',
             flexDirection: 'column',
         }}>
+{/*
+            <button onClick={pauseResume}>{webgazerPause ? 'Resume' : 'Pause'}</button>
+*/}
 
             {toggleHeatmap ? <HeatmapComponent newDataPoints={coords}/> : null}
             {toogleEyeTrackingCursor ? <EyeTrackingCursor coords={coords} pause={webgazerPause}/> : null}
 
-            <button onClick={pauseResume}>{webgazerPause ? 'Resume' : 'Pause'}</button>
-            <button onClick={() => dispatch(resetData())}>Clean heatmap</button>
-            <button onClick={() => checkIsCamApproved().then(res => {
-                console.log('Cam permission: ', res)
-                if (res) {
-                    setCamApproved(true)
-                } else {
-                    setModalIsOpen(true)
-                }
-            })}>check
-            </button>
-            <button onClick={() => {
-                requestCamApprove()
-            }}>request</button>
-            <button onClick={() => setToggleHeatmap(prev => !prev)}>Heatmap</button>
-            <button onClick={() => setToogleEyeTrackingCursor(prev => !prev)}>Gaze</button>
+
+            <FloatingControl>
+                <button onClick={pauseResume}>{webgazerPause ? 'Resume' : 'Pause'}</button>
+                <button onClick={() => dispatch(resetData())}>Clean heatmap</button>
+                <button onClick={() => checkIsCamApproved().then(res => {
+                    console.log('Cam permission: ', res)
+                    if (res) {
+                        setCamApproved(true)
+                    } else {
+                        setModalIsOpen(true)
+                    }
+                })}>check
+                </button>
+                <button onClick={() => {
+                    requestCamApprove()
+                }}>request
+                </button>
+                <button onClick={() => setToggleHeatmap(prev => !prev)}>Heatmap</button>
+                <button onClick={() => setToogleEyeTrackingCursor(prev => !prev)}>Gaze</button>
 
 
+            </FloatingControl>
 
-            <Environment/>
+
+            <FloatButton.Group
+                trigger={'hover'}
+                style={{right: 70 + 70}}
+                icon={<EyeFilled/>}
+
+            >
+                <FloatButton icon={<HeatMapOutlined/>} tooltip={<div>Heatmap</div>}
+                             onClick={() => {
+                                 setToggleHeatmap(prev => !prev)
+                             }}/>
+                <FloatButton icon={<EyeOutlined/>} tooltip={<div>Gaze Cursor</div>}
+                             onClick={() => {
+                                 setToogleEyeTrackingCursor(prev => !prev)
+                             }}/>
+
+
+            </FloatButton.Group>
+            <FloatButton.Group
+                trigger={'hover'}
+                icon={<ExperimentFilled/>}
+                style={{right: 70}}
+
+            >
+                <FloatButton icon={<AlignCenterOutlined/>} tooltip={<div>Subtitle</div>}
+                             onClick={() => {
+                                 setIsSubtitle(prev => !prev)
+                             }}/>
+                <FloatButton icon={<SwapOutlined/>} tooltip={<div>Flip</div>}
+                             onClick={() => {
+                                 setIsFlip(prev => !prev)
+                             }}/>
+
+            </FloatButton.Group>
+            {toggleHeatmap ? <FloatButton icon={<ClearOutlined/>}
+                                          tooltip={<div>Clean Heatmap</div>}
+                                          onClick={() => dispatch(resetData())}
+                                          style={{right: 70 + 70 + 70}}
+            /> : null}
+
+
+            <Environment isFlip={isFlip} isSubtitle={isSubtitle} domEnv={envRefParent}/>
+
 
         </div>
     );

@@ -1,12 +1,21 @@
 'use client'
 
-import {Col, Row} from "antd";
-import {useEffect, useRef, useState} from "react";
+import {Col, FloatButton, Row} from "antd";
+import React, {useEffect, useRef, useState} from "react";
 import {overflow_videos} from "@/app/showcase/environment/dummy_videos";
 import {subtitle} from "@/app/showcase/environment/dummy_text";
 import styled from "styled-components";
 import {slicingWindows} from "@/utils/slicing-windows";
 import Environment from "@/app/(teaching)/subjects/[subjectSlug]/chapter/[id]/environment";
+import {
+    AlignCenterOutlined, ClearOutlined,
+    ExperimentFilled,
+    EyeFilled,
+    EyeOutlined,
+    HeatMapOutlined,
+    SwapOutlined
+} from "@ant-design/icons";
+import {resetData} from "@/redux/features/heatmap/heatmapSlice";
 
 
 const CustomVideo = styled.video`
@@ -178,12 +187,42 @@ function Page() {
 
 
 function Page(){
+
+
+    const [isSubtitle, setIsSubtitle] = useState(false)
+    const [isFlip, setIsFlip] = useState(false)
+
+
+
     return(<div style={{
         display: 'flex',
         flexDirection: 'column',
         height: '100%',
     }}>
-        <Environment/>
+
+
+
+
+        <Environment isFlip={isFlip} isSubtitle={isSubtitle}/>
+
+
+
+        <FloatButton.Group
+            open={true}
+            trigger={'click'}
+            icon={<ExperimentFilled />}
+            style={{
+                right: 70
+            }}
+        >
+            <FloatButton icon={<AlignCenterOutlined />} tooltip={<div>Subtitle</div>}
+                         onClick={()=> {setIsSubtitle(prev => !prev)}}/>
+            <FloatButton icon={<SwapOutlined />} tooltip={<div>Flip</div>}
+                         onClick={()=> {setIsFlip(prev => !prev)}}/>
+
+        </FloatButton.Group>
+
+
 
     </div>)
 }

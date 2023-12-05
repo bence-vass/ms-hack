@@ -94,7 +94,7 @@ export default function RootLayout({children}) {
                         <AddressBar/>
                         <Content
                             style={{
-                                padding: 24,
+                                padding: 0,
                                 margin: 0,
                                 minHeight: 280,
                                 background: colorBgContainer,

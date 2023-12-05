@@ -1,9 +1,9 @@
-import {Col, Row} from "antd";
+import {Button, Col, Row} from "antd";
 import {overflow_videos} from "@/app/showcase/environment/dummy_videos";
 import styled from "styled-components";
 import {slicingWindows} from "@/utils/slicing-windows";
 import {subtitle} from "@/app/showcase/environment/dummy_text";
-import {useEffect, useRef, useState} from "react";
+import {useEffect, useLayoutEffect, useRef, useState} from "react";
 
 
 const CustomVideo = styled.video`
@@ -13,6 +13,7 @@ const CustomVideo = styled.video`
   transition-duration: 300ms;
   transform: ${props => props.isFlip && props.negativeTranslate ? 'translate(-100%, 0)' : null};
   transform: ${props => props.isFlip && !props.negativeTranslate ? 'translate(100%, 0)' : null};
+  user-select: none;
 `
 
 
@@ -34,6 +35,7 @@ const SubtitleDiv = styled.div`
     color: red;
   }
 `
+const subtitleWindows = slicingWindows(subtitle, 5)
 
 const ButtonContainer = styled.div`
   display: flex;
@@ -57,26 +59,32 @@ const Button = styled.button`
 `;
 
 
-function Environment() {
-    const subtitleWindows = slicingWindows(subtitle, 5)
+function Environment({isFlip, isSubtitle, domEnv=useRef(null)}) {
     let i = 0
 
-    const domEnv = useRef(null)
+    //const domEnv = useRef(null)
 
-    const [showSub, setShowSub] = useState(true)
-    const [subCoords, setSubCoords] = useState({x: 0, y: 0})
+        const [subCoords, setSubCoords] = useState({x: 0, y: 0})
     const [currentSub, setCurrentSub] = useState('Some subscript')
     const [currentOverflowVideoSrc, setCurrentOverflowVideoSrc] = useState()
     const [currentSubjectVideoSrc, setCurrentSubjectVideoSrc] = useState()
     const videoPlayerOverflow = useRef(null)
     const videoPlayerSubject = useRef(null)
+const [isMute, setIsMute] = useState(true)
+
 
     function getNextVideo(list) {
         const rand = Math.floor(Math.random() * list.length)
         return list[rand].url
     }
 
+
+    function toogleMute(){
+        setIsMute(prevState => !prevState)
+    }
+
     useEffect(() => {
+
         setCurrentSubjectVideoSrc(getNextVideo(overflow_videos))
         setCurrentOverflowVideoSrc(getNextVideo(overflow_videos))
         const rect = domEnv.current.children['overflow'].getBoundingClientRect()
@@ -102,17 +110,16 @@ function Environment() {
 
         return () => {
             clearInterval(interval)
+window.removeEventListener('focus', toogleMute)
+
         }
 
     }, []);
 
 
-    const [isFlip, setIsFlip] = useState(false)
-
     function flipContainers() {
-        setIsFlip(prevState => !prevState)
-        const rect = domEnv.current.children['overflow'].getBoundingClientRect()
-        if (!isFlip) {
+                const rect = domEnv.current.children['overflow'].getBoundingClientRect()
+        if (isFlip) {
             setSubCoords({
                 x: rect.x + (rect.right - rect.left) * (3 / 2),
                 y: rect.y + (rect.bottom - rect.top) / 2
@@ -126,15 +133,15 @@ function Environment() {
     }
 
 
-    function toggleSub() {
-        setShowSub(prevState => !prevState)
-    }
+    useEffect(() => {
+        flipContainers()
+    }, [isFlip]);
 
 
     return (
         <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
           <h1>Environment Showcase</h1>
-          <ButtonContainer>
+            <ButtonContainer>
             <Button onClick={() => flipContainers()}>
               {isFlip ? "Flip back" : "Flip"}
             </Button>
@@ -192,6 +199,59 @@ function Environment() {
                   <source src={currentSubjectVideoSrc} type={"video/mp4"} />
                 ) : null}
               </CustomVideo>
+
+    return (<div style={{
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100%',
+    }}>
+
+        <SubtitleDiv id={'subscript'} style={{
+            left: subCoords.x,
+            top: subCoords.y,
+            display: isSubtitle ? 'block' : 'none',
+        }}>
+            <p dangerouslySetInnerHTML={{__html: currentSub}}></p>
+        </SubtitleDiv>
+
+
+        <Row ref={domEnv} style={{height: '100%',}} onClick={() => toogleMute()}>
+            <Col span={12} id={'overflow'} style={{padding: 0}}>
+                <CustomVideo
+                    negativeTranslate={false}
+                    isFlip={isFlip}
+                    ref={videoPlayerOverflow}
+                    controls={false}
+                    autoPlay={true}
+                    muted={true}
+                    onEnded={() => {
+                        setCurrentOverflowVideoSrc(getNextVideo(overflow_videos))
+                        videoPlayerOverflow.current.load()
+                        videoPlayerOverflow.current.play()
+                    }}
+                >
+                    {currentOverflowVideoSrc ? <source src={currentOverflowVideoSrc} type={'video/mp4'}/> : null}
+                </CustomVideo>
+            </Col>
+            <Col span={12} id={'subject'}>
+                <CustomVideo
+                    negativeTranslate={true}
+                    isFlip={isFlip}
+                    ref={videoPlayerSubject}
+                    controls={false}
+                    autoPlay={true}
+                    muted={isMute}
+                    onEnded={() => {
+                        setCurrentSubjectVideoSrc(getNextVideo(overflow_videos))
+                        videoPlayerSubject.current.load()
+                        videoPlayerSubject.current.play()
+                    }}
+
+
+                >
+                    {currentSubjectVideoSrc ? <source src={currentSubjectVideoSrc} type={'video/mp4'}/> : null}
+                </CustomVideo>
+
             </Col>
           </Row>
         </div>
