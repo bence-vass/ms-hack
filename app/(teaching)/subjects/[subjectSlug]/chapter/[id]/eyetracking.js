@@ -21,7 +21,8 @@ export default function EyeTrackingCursor({coords, pause}) {
             top: 0,
             left: 0,
             overflow: "hidden",
-            pointerEvents: 'none'
+            pointerEvents: 'none',
+            zIndex: 999,
         }}>
             <div style={{
                 ...dotStyle,

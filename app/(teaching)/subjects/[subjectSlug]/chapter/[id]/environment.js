@@ -1,4 +1,4 @@
-import {Col, Row} from "antd";
+import {Button, Col, Row} from "antd";
 import {overflow_videos} from "@/app/showcase/environment/dummy_videos";
 import styled from "styled-components";
 import {slicingWindows} from "@/utils/slicing-windows";
@@ -13,6 +13,7 @@ const CustomVideo = styled.video`
   transition-duration: 300ms;
   transform: ${props => props.isFlip && props.negativeTranslate ? 'translate(-100%, 0)' : null};
   transform: ${props => props.isFlip && !props.negativeTranslate ? 'translate(100%, 0)' : null};
+  user-select: none;
 `
 
 
@@ -34,21 +35,24 @@ const SubtitleDiv = styled.div`
     color: red;
   }
 `
+const subtitleWindows = slicingWindows(subtitle, 5)
 
 
-function Environment() {
-    const subtitleWindows = slicingWindows(subtitle, 5)
+function Environment({isFlip, isSubtitle}) {
     let i = 0
 
     const domEnv = useRef(null)
 
-    const [showSub, setShowSub] = useState(true)
     const [subCoords, setSubCoords] = useState({x: 0, y: 0})
     const [currentSub, setCurrentSub] = useState('Some subscript')
     const [currentOverflowVideoSrc, setCurrentOverflowVideoSrc] = useState()
     const [currentSubjectVideoSrc, setCurrentSubjectVideoSrc] = useState()
     const videoPlayerOverflow = useRef(null)
     const videoPlayerSubject = useRef(null)
+    const [isMute, setIsMute] = useState(true)
+
+
+
 
     function getNextVideo(list) {
         const rand = Math.floor(Math.random() * list.length)
@@ -79,6 +83,7 @@ function Environment() {
         }, 1000)
 
 
+
         return () => {
             clearInterval(interval)
         }
@@ -86,12 +91,10 @@ function Environment() {
     }, []);
 
 
-    const [isFlip, setIsFlip] = useState(false)
 
     function flipContainers() {
-        setIsFlip(prevState => !prevState)
         const rect = domEnv.current.children['overflow'].getBoundingClientRect()
-        if (!isFlip) {
+        if (isFlip) {
             setSubCoords({
                 x: rect.x + (rect.right - rect.left) * (3 / 2),
                 y: rect.y + (rect.bottom - rect.top) / 2
@@ -105,9 +108,10 @@ function Environment() {
     }
 
 
-    function toggleSub() {
-        setShowSub(prevState => !prevState)
-    }
+    useEffect(() => {
+        flipContainers()
+    }, [isFlip]);
+
 
 
     return (<div style={{
@@ -115,18 +119,17 @@ function Environment() {
         flexDirection: 'column',
         height: '100%',
     }}>
-        <h1>Environment Showcase</h1>
-        <button onClick={() => flipContainers()}>{isFlip ? 'Flip back' : 'Flip'}</button>
-        <button onClick={() => toggleSub()}>{showSub ? 'Hide sub' : 'Show sub'}</button>
 
         <SubtitleDiv id={'subscript'} style={{
             left: subCoords.x,
             top: subCoords.y,
-            display: showSub ? 'block' : 'none',
+            display: isSubtitle ? 'block' : 'none',
         }}>
             <p dangerouslySetInnerHTML={{__html: currentSub}}></p>
         </SubtitleDiv>
 
+
+        <button onClick={()=> setIsMute(prev => !prev)}>mute</button>
 
         <Row ref={domEnv} style={{height: '100%',}}>
             <Col span={12} id={'overflow'} style={{padding: 0}}>
@@ -153,12 +156,14 @@ function Environment() {
                     ref={videoPlayerSubject}
                     controls={false}
                     autoPlay={true}
-                    muted={true}
+                    muted={isMute}
                     onEnded={() => {
                         setCurrentSubjectVideoSrc(getNextVideo(overflow_videos))
                         videoPlayerSubject.current.load()
                         videoPlayerSubject.current.play()
                     }}
+
+
                 >
                     {currentSubjectVideoSrc ? <source src={currentSubjectVideoSrc} type={'video/mp4'}/> : null}
                 </CustomVideo>

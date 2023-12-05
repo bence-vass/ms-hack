@@ -14,3 +14,11 @@ export const SpinContainer = styled.div`
   
   
 `
+
+
+export const FloatingControl = styled.div`
+  position: fixed;
+  z-index: 900;
+  display: none;
+  
+`
