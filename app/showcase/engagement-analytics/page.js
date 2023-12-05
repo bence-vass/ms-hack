@@ -110,7 +110,7 @@ function Page(props) {
         }}>
             <h1>Engagement Analytics Showcase</h1>
 
-            <HeatmapComponent newDataPoints={coords}/>
+
             <button onClick={() => {
                 dispatch(resetData())
                 cleanCache()
@@ -122,6 +122,10 @@ function Page(props) {
             }}>
                 {cols}
             </Row>
+
+
+            <HeatmapComponent newDataPoints={coords}/>
+
         </div>
     );
 }
