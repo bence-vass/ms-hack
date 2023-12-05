@@ -62,7 +62,7 @@ export const subject_videos = [
         "url": "https://classhackathon4076695827.blob.core.windows.net/asset-0194eac6-05f0-43ec-9427-ff2218c29969/teaching_vid_2.mp4",
         "type": "teaching_vid",
         "mode": "horizontal",
-        "length": "long",
+        "length": "short",
         "quality": "hd"
       }
 ]
