@@ -3,11 +3,13 @@ import React from "react";
 export default function EyeTrackingCursor({coords, pause}) {
 
     const dotStyle = {
-        width: 10,
-        height: 10,
+        width: 100,
+        height: 100,
         borderRadius: '50%',
-        backgroundColor: 'green',
+        backgroundColor: '#21867f',
         position: 'absolute',
+        opacity: 0.3,
+        boxShadow: "0 0 10px 20px #21867f",
     }
     if (pause || (coords.x == null && coords.y == null)) {
         return null
