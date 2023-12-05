@@ -33,7 +33,7 @@ export const quiz = [
     }
 
 ]
-const quiz_teaching_vid_2 = [
+export const quiz_teaching_vid_2 = [
     {
       type: 'multiple_choice',
       question: 'What does the Pythagorean theorem state?',
