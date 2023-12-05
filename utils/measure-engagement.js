@@ -116,17 +116,48 @@ export function cleanFocusStore() {
     storeFocusType = {}
 }
 
+let sub = false
+function reactionHandler(focusTypes, resetAfter = 250) {
 
-export function measureEngagement(environment, userInputs, profile = defaultProfile,) {
+    let cmds = []
+    const numSubject = focusTypes['subject'] || 0
+    const totalNum = Object.values(focusTypes).reduce((p, c) => p + c) || 0
+    const ration = numSubject / totalNum
+    console.log(ration)
+    if (ration < .65 && totalNum >= resetAfter * .4) {
+        if (ration < .25) {
+            cmds.push('flip')
+            cmds.push('clean')
+            cleanFocusStore()
+            sub = false
+        } else {
+            if(!sub){
+                cmds.push('subtitle')
+                sub = true
+            }
+        }
+    }
+
+
+    if (totalNum >= resetAfter) {
+        cleanFocusStore()
+        cmds.push('clean')
+        sub = false
+    }
+    return cmds
+}
+
+export function measureEngagement(environment, userInputs, profile = defaultProfile, resetAfter = 250) {
     cacheData(userInputs)
     const [currentFocusId, currentFocusType] = predictFocusObject(environment)
     storeFocusObject(currentFocusId)
     storeFocusObject(currentFocusType, storeFocusType)
     //console.log(storeFocusId)
-    //console.log(storeFocusType)
+    console.log(storeFocusType)
 
+    let actions = reactionHandler(storeFocusType, resetAfter)
 
-    return [currentFocusId, currentFocusType, storeFocusId, storeFocusType]
+    return [currentFocusId, currentFocusType, storeFocusId, storeFocusType, actions]
 }
 
 

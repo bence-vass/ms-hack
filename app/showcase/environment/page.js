@@ -201,6 +201,12 @@ function Page(){
     }}>
 
 
+
+
+        <Environment isFlip={isFlip} isSubtitle={isSubtitle}/>
+
+
+
         <FloatButton.Group
             open={true}
             trigger={'click'}
@@ -215,10 +221,6 @@ function Page(){
                          onClick={()=> {setIsFlip(prev => !prev)}}/>
 
         </FloatButton.Group>
-
-
-
-        <Environment isFlip={isFlip} isSubtitle={isSubtitle}/>
 
 
 
