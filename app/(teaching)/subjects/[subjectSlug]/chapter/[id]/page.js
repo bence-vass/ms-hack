@@ -6,7 +6,10 @@ import {useAppDispatch, useAppSelector} from "@/redux/hooks";
 import {resetData} from "@/redux/features/heatmap/heatmapSlice";
 import {error} from "next/dist/build/output/log";
 import {checkIsCamApproved, requestCamApprove} from "@/ui/webcam-permission";
-import {Modal} from "antd";
+import {Modal, Spin} from "antd";
+import {SpinContainer} from "@/app/(teaching)/subjects/[subjectSlug]/chapter/[id]/custom-styled-components";
+import {LoadingOutlined} from "@ant-design/icons";
+import Environment from "@/app/(teaching)/subjects/[subjectSlug]/chapter/[id]/environment";
 
 
 function loadWebgazerScript(setState) {
@@ -65,6 +68,7 @@ function Page({params}) {
                 setWebgazerReady(true)
             }).catch(error => {
                 console.log(error)
+                setModalIsOpen(true)
             })
 
 
@@ -125,16 +129,39 @@ function Page({params}) {
 
     function modalHandleCancel() {
         setModalIsOpen(false)
+        setWebgazerReady(true)
+        pauseResume()
+
     }
 
-    return (
-        <div>
-            <CamWarningModal isOpen={modalIsOpen} onOkFn={modalHandleOk} onCancelFn={modalHandleCancel}/>
+    if (!webgazerReady) {
+        return (<div style={{
+            position: 'relative',
+            height: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+        }}>
+            <div><h3>Chapter {chapter}</h3></div>
+            <SpinContainer><Spin indicator={<LoadingOutlined style={{fontSize: 100}}/>}/></SpinContainer>
+            <CamWarningModal isOpen={modalIsOpen}
+                             onOkFn={modalHandleOk}
+                             okText={'Understood'}
+                             onCancelFn={modalHandleCancel}
+                             cancelText={'Continue without camera'}
+            />
+
+        </div>)
+    }
+
+    return (<div style={{
+            height: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+        }}>
+
             {toggleHeatmap ? <HeatmapComponent newDataPoints={coords}/> : null}
             {toogleEyeTrackingCursor ? <EyeTrackingCursor coords={coords} pause={webgazerPause}/> : null}
 
-            <h3>Chapter {chapter}</h3>
-            <h2>{webgazerReady ? 'Ready' : 'Loading...'}</h2>
             <button onClick={pauseResume}>{webgazerPause ? 'Resume' : 'Pause'}</button>
             <button onClick={() => dispatch(resetData())}>Clean heatmap</button>
             <button onClick={() => checkIsCamApproved().then(res => {
@@ -146,18 +173,31 @@ function Page({params}) {
                 }
             })}>check
             </button>
-            <button onClick={() => requestCamApprove()}>request</button>
+            <button onClick={() => {
+                requestCamApprove()
+            }}>request</button>
             <button onClick={() => setToggleHeatmap(prev => !prev)}>Heatmap</button>
             <button onClick={() => setToogleEyeTrackingCursor(prev => !prev)}>Gaze</button>
+
+
+
+            <Environment/>
+
         </div>
     );
 }
 
 export default Page;
 
-function CamWarningModal({isOpen, onOkFn, onCancelFn}) {
+function CamWarningModal({isOpen, onOkFn, onCancelFn, okText, cancelText}) {
 
-    return (<Modal title={'No cam waring'} open={isOpen} onOk={onOkFn} onCancel={onCancelFn}>
+    return (<Modal title={'No cam waring'}
+                   open={isOpen}
+                   onOk={onOkFn}
+                   okText={okText}
+                   onCancel={onCancelFn}
+                   cancelText={cancelText}
+    >
         <p>No cam permission</p>
 
     </Modal>)

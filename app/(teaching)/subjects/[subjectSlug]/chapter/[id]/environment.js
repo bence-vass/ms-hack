@@ -1,12 +1,9 @@
-'use client'
-
 import {Col, Row} from "antd";
-import {useEffect, useRef, useState} from "react";
 import {overflow_videos} from "@/app/showcase/environment/dummy_videos";
-import {subtitle} from "@/app/showcase/environment/dummy_text";
 import styled from "styled-components";
 import {slicingWindows} from "@/utils/slicing-windows";
-import Environment from "@/app/(teaching)/subjects/[subjectSlug]/chapter/[id]/environment";
+import {subtitle} from "@/app/showcase/environment/dummy_text";
+import {useEffect, useRef, useState} from "react";
 
 
 const CustomVideo = styled.video`
@@ -32,15 +29,14 @@ const SubtitleDiv = styled.div`
   p {
     -webkit-text-stroke: .1rem #000;
   }
-  
+
   b {
     color: red;
   }
 `
 
-/*
 
-function Page() {
+function Environment() {
     const subtitleWindows = slicingWindows(subtitle, 5)
     let i = 0
 
@@ -71,7 +67,7 @@ function Page() {
         setCurrentSub(subtitleWindows[i])
         i += 1
         const interval = setInterval(() => {
-            if(i < subtitleWindows.length){
+            if (i < subtitleWindows.length) {
                 const sub = (<>
                     <p>{subtitleWindows[i]}</p>
                 </>)
@@ -135,7 +131,7 @@ function Page() {
         <Row ref={domEnv} style={{height: '100%',}}>
             <Col span={12} id={'overflow'} style={{padding: 0}}>
                 <CustomVideo
-
+                    negativeTranslate={false}
                     isFlip={isFlip}
                     ref={videoPlayerOverflow}
                     controls={false}
@@ -173,19 +169,4 @@ function Page() {
     </div>)
 }
 
-*/
-
-
-
-function Page(){
-    return(<div style={{
-        display: 'flex',
-        flexDirection: 'column',
-        height: '100%',
-    }}>
-        <Environment/>
-
-    </div>)
-}
-
-export default Page
+export default Environment
