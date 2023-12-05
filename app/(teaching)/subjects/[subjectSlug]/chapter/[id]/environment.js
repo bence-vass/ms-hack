@@ -1,9 +1,10 @@
 import {Button, Col, Row} from "antd";
-import {overflow_videos} from "@/app/showcase/environment/dummy_videos";
+import {overflow_videos, subject_videos} from "@/app/showcase/environment/dummy_videos";
 import styled from "styled-components";
 import {slicingWindows} from "@/utils/slicing-windows";
 import {subtitle} from "@/app/showcase/environment/dummy_text";
 import {useEffect, useLayoutEffect, useRef, useState} from "react";
+import {useRouter} from "next/navigation";
 
 
 const CustomVideo = styled.video`
@@ -241,10 +242,9 @@ window.removeEventListener('focus', toogleMute)
                     controls={false}
                     autoPlay={true}
                     muted={isMute}
+                    src={subject_videos[0].url}
                     onEnded={() => {
-                        setCurrentSubjectVideoSrc(getNextVideo(overflow_videos))
-                        videoPlayerSubject.current.load()
-                        videoPlayerSubject.current.play()
+                        router.push('/quiz')
                     }}
 
 
