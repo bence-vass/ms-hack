@@ -7,13 +7,15 @@ import {useEffect, useLayoutEffect, useRef, useState} from "react";
 import {useRouter} from "next/navigation";
 
 
-const CustomVideo = styled.video`
+const CustomVideo = styled("video", {
+    shouldForwardProp: props => props !== 'isflip' || props !== 'negativetranslate'
+})`
   object-fit: cover;
   width: 100%;
   height: 100%;
   transition-duration: 300ms;
-  transform: ${props => props.isFlip && props.negativeTranslate ? 'translate(-100%, 0)' : null};
-  transform: ${props => props.isFlip && !props.negativeTranslate ? 'translate(100%, 0)' : null};
+  transform: ${props => props.isflip === 'true' && props.negativetranslate === 'true' ? 'translate(-100%, 0)' : null};
+  transform: ${props => props.isflip === 'true' && props.negativetranslate === 'false' ? 'translate(100%, 0)' : null};
   user-select: none;
 `
 
@@ -39,10 +41,10 @@ const SubtitleDiv = styled.div`
 const subtitleWindows = slicingWindows(subtitle, 5)
 
 
-function Environment({isFlip, isSubtitle, domEnv=useRef(null)}) {
+function Environment({isFlip, isSubtitle, domEnv}) {
     let i = 0
 
-    //const domEnv = useRef(null)
+
 
     const [subCoords, setSubCoords] = useState({x: 0, y: 0})
     const [currentSub, setCurrentSub] = useState('Some subscript')
@@ -137,8 +139,8 @@ function Environment({isFlip, isSubtitle, domEnv=useRef(null)}) {
         <Row ref={domEnv} style={{height: '100%',}} onClick={() => toogleMute()}>
             <Col span={12} id={'overflow'} style={{padding: 0}}>
                 <CustomVideo
-                    negativeTranslate={false}
-                    isFlip={isFlip}
+                    negativetranslate={false.toString()}
+                    isflip={isFlip.toString()}
                     ref={videoPlayerOverflow}
                     controls={false}
                     autoPlay={true}
@@ -154,8 +156,8 @@ function Environment({isFlip, isSubtitle, domEnv=useRef(null)}) {
             </Col>
             <Col span={12} id={'subject'}>
                 <CustomVideo
-                    negativeTranslate={true}
-                    isFlip={isFlip}
+                    negativetranslate={true.toString()}
+                    isflip={isFlip.toString()}
                     ref={videoPlayerSubject}
                     controls={false}
                     autoPlay={true}

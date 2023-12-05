@@ -166,7 +166,7 @@ function Page(props) {
                     <p>You are focusing on Block <b>No. {currentFocusIdState.slice(-1)}</b></p>
                 </>
                 :
-                <p>"You are not focusing" (Press P on your keyboard)</p>
+                <p>`&quot;`quot You are not focusing`&quot;` (Press P on your keyboard)</p>
             }
             {currentFocusTypeState && currentFocusIdState ? <p>{focusTypeText}</p> : "You are not concentrating"}
 
