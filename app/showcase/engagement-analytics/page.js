@@ -1,7 +1,7 @@
 'use client'
 
 import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {Col, Row} from "antd";
+import {Col, message, Row} from "antd";
 import HeatmapComponent from "@/app/(teaching)/subjects/[subjectSlug]/chapter/[id]/heatmap";
 import {useAppDispatch} from "@/redux/hooks";
 import {resetData} from "@/redux/features/heatmap/heatmapSlice";
@@ -58,6 +58,9 @@ function Page(props) {
 
     const domEnv = useRef(null)
     const [coords, setCoords] = useState({x: null, y: null})
+    const [currentFocusIdState, setCurrentFocusIdState] = useState(null)
+    const [currentFocusTypeState, setCurrentFocusTypeState] = useState(null)
+
     const handleClick = (e) => {
         setCoords({x: e.x, y: e.y})
     }
@@ -75,7 +78,17 @@ function Page(props) {
         if (recordCursor) {
             setCoords({x: e.clientX, y: e.clientY})
             const env = describeEnvironment(domEnv)
-            measureEngagement(env, {x: e.clientX, y: e.clientY})
+            let currentFocusId, currentFocusType
+            [currentFocusId, currentFocusType, ,] = measureEngagement(env, {x: e.clientX, y: e.clientY})
+            console.log(currentFocusId)
+            console.log(currentFocusType)
+            if (currentFocusId !== currentFocusIdState) {
+                setCurrentFocusIdState(currentFocusId)
+            }
+            if (currentFocusType !== currentFocusTypeState) {
+                setCurrentFocusTypeState(currentFocusType)
+            }
+
         }
     }
 
@@ -87,6 +100,7 @@ function Page(props) {
         describeEnvironment(domEnv)
         // document.addEventListener('click', handleClick)
         document.addEventListener('keydown', handleKeyDown)
+        info()
         return () => {
             // document.removeEventListener('click', handleClick)
             document.removeEventListener('keydown', handleKeyDown)
@@ -102,13 +116,41 @@ function Page(props) {
     }, [mouseMoveCallback]);
 
 
+    const [messageApi, contextHolder] = message.useMessage()
+
+    function info() {
+        messageApi.info({
+            content: "Press the Button ( P ) on your keyboard to simulate gazing, press again to turn off",
+            key: 'infoMessage',
+            duration: 15,
+        })
+
+    }
+
+    const focusTypeText ={
+        overflow: "Focusing on the entertainment unit (light grey)",
+        subject: "Focusing on the subject (dark grey)",
+        empty: "You have lost focus"
+    }[currentFocusTypeState] ?? null
+
     return (
         <div style={{
             display: 'flex',
             flexDirection: 'column',
             height: '100%',
         }}>
+            {contextHolder}
+
             <h1>Engagement Analytics Showcase</h1>
+
+            {currentFocusIdState ?
+                <>
+                    <p>You are focusing on Block <b>No. {currentFocusIdState.slice(-1)}</b></p>
+                </>
+                :
+                <p>"You are not focusing" (Press P on your keyboard)</p>
+            }
+            {currentFocusTypeState && currentFocusIdState ? <p>{focusTypeText}</p> : "You are not concentrating"}
 
 
             <button onClick={() => {

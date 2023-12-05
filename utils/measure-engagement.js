@@ -93,11 +93,11 @@ function predictFocusObject(environment) {
             rect.bottom >= meanPos.y && meanPos.y >= rect.top &&
             rect.left <= meanPos.x && meanPos.x <= rect.right
         ) {
-            return [environment[i].id, environment[i].type]
+            return [environment[i].id, environment[i].type || "empty"]
         }
     }
 
-    return [null, null]
+    return [null, 'empty']
 }
 
 let storeFocusId = {}
@@ -118,17 +118,15 @@ export function cleanFocusStore() {
 
 
 export function measureEngagement(environment, userInputs, profile = defaultProfile,) {
-
-    //console.log(userInputs, environment)
     cacheData(userInputs)
-    //console.log(environment)
     const [currentFocusId, currentFocusType] = predictFocusObject(environment)
     storeFocusObject(currentFocusId)
-    console.log(storeFocusId)
     storeFocusObject(currentFocusType, storeFocusType)
-    console.log(storeFocusType)
-    //console.log(cache_xs)
-    //console.log(meanInducedMomentum())
+    //console.log(storeFocusId)
+    //console.log(storeFocusType)
+
+
+    return [currentFocusId, currentFocusType, storeFocusId, storeFocusType]
 }
 
 

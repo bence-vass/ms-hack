@@ -3,7 +3,7 @@ import {overflow_videos} from "@/app/showcase/environment/dummy_videos";
 import styled from "styled-components";
 import {slicingWindows} from "@/utils/slicing-windows";
 import {subtitle} from "@/app/showcase/environment/dummy_text";
-import {useEffect, useRef, useState} from "react";
+import {useEffect, useLayoutEffect, useRef, useState} from "react";
 
 
 const CustomVideo = styled.video`
@@ -52,14 +52,20 @@ function Environment({isFlip, isSubtitle}) {
     const [isMute, setIsMute] = useState(true)
 
 
-
-
     function getNextVideo(list) {
         const rand = Math.floor(Math.random() * list.length)
         return list[rand].url
     }
 
+
+    function toogleMute(){
+        setIsMute(prevState => !prevState)
+    }
+
     useEffect(() => {
+
+
+
         setCurrentSubjectVideoSrc(getNextVideo(overflow_videos))
         setCurrentOverflowVideoSrc(getNextVideo(overflow_videos))
         const rect = domEnv.current.children['overflow'].getBoundingClientRect()
@@ -83,13 +89,13 @@ function Environment({isFlip, isSubtitle}) {
         }, 1000)
 
 
-
         return () => {
             clearInterval(interval)
+            window.removeEventListener('focus', toogleMute)
+
         }
 
     }, []);
-
 
 
     function flipContainers() {
@@ -129,9 +135,7 @@ function Environment({isFlip, isSubtitle}) {
         </SubtitleDiv>
 
 
-        <button onClick={()=> setIsMute(prev => !prev)}>mute</button>
-
-        <Row ref={domEnv} style={{height: '100%',}}>
+        <Row ref={domEnv} style={{height: '100%',}} onClick={() => toogleMute()}>
             <Col span={12} id={'overflow'} style={{padding: 0}}>
                 <CustomVideo
                     negativeTranslate={false}
