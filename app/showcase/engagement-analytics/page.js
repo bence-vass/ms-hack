@@ -79,14 +79,32 @@ function Page(props) {
             setCoords({x: e.clientX, y: e.clientY})
             const env = describeEnvironment(domEnv)
             let currentFocusId, currentFocusType
-            [currentFocusId, currentFocusType, ,] = measureEngagement(env, {x: e.clientX, y: e.clientY})
-            console.log(currentFocusId)
-            console.log(currentFocusType)
+            let actions
+            [currentFocusId, currentFocusType, , , actions] = measureEngagement(
+                env,
+                {x: e.clientX, y: e.clientY},
+                {},
+                1000
+            )
             if (currentFocusId !== currentFocusIdState) {
                 setCurrentFocusIdState(currentFocusId)
             }
             if (currentFocusType !== currentFocusTypeState) {
                 setCurrentFocusTypeState(currentFocusType)
+            }
+
+            if (actions.length !== 0) {
+                for (let action of actions) {
+                    console.log(action)
+                    if (action === 'clean') {
+                        dispatch(resetData())
+                    } else if (action === 'flip') {
+                        messageApi.warning('flip')
+
+                    } else if (action === 'subtitle') {
+                        messageApi.warning('sub')
+                    }
+                }
             }
 
         }
@@ -127,7 +145,7 @@ function Page(props) {
 
     }
 
-    const focusTypeText ={
+    const focusTypeText = {
         overflow: "Focusing on the entertainment unit (light grey)",
         subject: "Focusing on the subject (dark grey)",
         empty: "You have lost focus"
@@ -152,13 +170,14 @@ function Page(props) {
             }
             {currentFocusTypeState && currentFocusIdState ? <p>{focusTypeText}</p> : "You are not concentrating"}
 
-
+            {/*
             <button onClick={() => {
                 dispatch(resetData())
                 cleanCache()
                 cleanFocusStore()
             }}>clean heatmap
             </button>
+            */}
             <Row ref={domEnv} style={{
                 flexGrow: 1
             }}>
