@@ -124,7 +124,7 @@ function reactionHandler(focusTypes, resetAfter = 250) {
     const totalNum = Object.values(focusTypes).reduce((p, c) => p + c) || 0
     const ration = numSubject / totalNum
     console.log(ration)
-    if (ration < .65 && totalNum >= resetAfter * .4) {
+    if (ration < .55 && totalNum >= resetAfter * .4) {
         if (ration < .25) {
             cmds.push('flip')
             cmds.push('clean')

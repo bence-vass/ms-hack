@@ -22,6 +22,7 @@ import {
 import Environment from "@/app/(teaching)/subjects/[subjectSlug]/chapter/[id]/environment";
 import {measureEngagement} from "@/utils/measure-engagement";
 import {router} from "next/client";
+import {useRouter} from "next/navigation";
 
 
 function loadWebgazerScript(setState) {
@@ -43,7 +44,7 @@ function loadWebgazerScript(setState) {
 
 function Page({params}) {
     const dispatch = useAppDispatch()
-
+    const router = useRouter()
     const chapter = params.id || 'No chapter selected'
     const [webgazerScriptLoaded, setWebgazerScriptLoaded] = useState(false)
     const [camApproved, setCamApproved] = useState(false)
@@ -313,7 +314,7 @@ function Page({params}) {
 
 export default Page;
 
-function CamWarningModal({isOpen, onOkFn, onCancelFn, okText, cancelText}) {
+export function CamWarningModal({isOpen, onOkFn, onCancelFn, okText, cancelText}) {
 
     return (<Modal title={'No cam waring'}
                    open={isOpen}
