@@ -13,6 +13,7 @@ import {resetData} from "@/redux/features/heatmap/heatmapSlice";
 import Environment from "@/app/(teaching)/subjects/[subjectSlug]/chapter/[id]/environment";
 import {router} from "next/client";
 import {CamWarningModal} from "@/app/(teaching)/subjects/[subjectSlug]/chapter/[id]/page";
+import styled from "styled-components";
 
 function Page() {
 
@@ -142,7 +143,6 @@ function Page() {
             display: 'flex',
             flexDirection: 'column',
         }}>
-            <div><h3>Chapter</h3></div>
             <SpinContainer><Spin indicator={<LoadingOutlined style={{fontSize: 100}}/>}/></SpinContainer>
             <CamWarningModal isOpen={modalIsOpen}
                              onOkFn={modalHandleOk}
@@ -158,6 +158,7 @@ function Page() {
         height: '100%',
         display: 'flex',
         flexDirection: 'column',
+        position: 'relative',
     }}>
         {/*
             <button onClick={pauseResume}>{webgazerPause ? 'Resume' : 'Pause'}</button>
@@ -165,9 +166,34 @@ function Page() {
 
         <EyeTrackingCursor coords={coords} pause={webgazerPause}/>
 
+        <CalibrationDots style={{left: 50, top: 50}}/>
+        <CalibrationDots style={{right: 50, top: 50}}/>
+        <CalibrationDots style={{left: 50, bottom: 50}}/>
+        <CalibrationDots style={{right: 50, bottom: 50}}/>
+        <CalibrationDots style={{right: '50%', bottom: '50%'}}/>
+
+        <div style={{
+            textAlign: 'center',
+            fontSize: 20,
+            top: '20vh',
+            position: 'relative'
+        }}>
+            <p>Optimal performance is achieved when using this device in a well-lit room, positioned approximately 1 to
+                1.2 meters from the camera.</p>
+            <p>Calibration involves clicking and moving the cursor while maintaining direct eye contact.</p>
+        </div>
+
 
     </div>)
 }
 
+
+const CalibrationDots = styled.div`
+  background-color: black;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  position: absolute;
+`
 
 export default Page

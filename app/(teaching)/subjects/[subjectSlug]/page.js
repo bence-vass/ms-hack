@@ -14,7 +14,7 @@ const styles = {
     padding: '20px',
     backgroundColor: '#fff',
     borderRadius: '8px',
-    boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
+    //boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
   },
   heading: {
     color: '#000000',
@@ -33,7 +33,7 @@ const styles = {
     fontSize: '1.5rem',
     margin: '10px 0',
     position: 'relative',
-    
+
   },
   subTopicLink: {
     textDecoration: 'none',
@@ -53,7 +53,7 @@ const styles = {
   },
   subTopic: {
     color: '#555',
-    fontSize: '1.2rem', 
+    fontSize: '1.2rem',
     margin: '5px 0',
     paddingLeft: '10px',
   },
@@ -82,7 +82,7 @@ function Page({ params }) {
                     active={sub.active}
                     href={current_path + '/chapter/' + sub.slug}
                   >
-                    {sub.title}
+                    {sub.active ? <b>{sub.title}</b> : sub.title}
                   </CustomLink>
                 </li>
               ))}

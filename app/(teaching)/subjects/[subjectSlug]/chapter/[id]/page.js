@@ -211,7 +211,6 @@ function Page({params}) {
             display: 'flex',
             flexDirection: 'column',
         }}>
-            <div><h3>Chapter {chapter}</h3></div>
             <SpinContainer><Spin indicator={<LoadingOutlined style={{fontSize: 100}}/>}/></SpinContainer>
             <CamWarningModal isOpen={modalIsOpen}
                              onOkFn={modalHandleOk}
