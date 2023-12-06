@@ -77,7 +77,7 @@ export default function RootLayout({children}) {
                     </Menu>
                 </Header>
                 <Layout>
-
+                    <Sider width={0}/>
                     <Layout
                         style={{
                             padding: '24px',
