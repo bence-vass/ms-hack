@@ -3,6 +3,7 @@ export const chapters = [
         title: "Introduction to Algebra",
         slug: "introduction-to-algebra",
         active: false,
+        subjectSlug: "mathematics",
         subtopics: [
             {title: "Basic operations", slug: "basic-operations", active: false},
             {title: "Solving equations", slug: "solving-equations", active: false},
@@ -13,6 +14,7 @@ export const chapters = [
         title: "Geometry",
         slug: "geometry",
         active: false,
+        subjectSlug: "mathematics",
         subtopics: [
             {title: "Basic geometric shapes", slug: "basic-geometric-shapes", active: true},
             {title: "Area and perimeter", slug: "area-and-perimeter", active: false},
@@ -23,6 +25,7 @@ export const chapters = [
         title: "Trigonometry",
         slug: "trigonometry",
         active: false,
+        subjectSlug: "mathematics",
         subtopics: [
             {title: "Ratios and angles", slug: "ratios-and-angles", active: false},
             {title: "Trigonometric functions", slug: "trigonometric-functions", active: false},
@@ -33,6 +36,7 @@ export const chapters = [
         title: "Functions and Graphs",
         slug: "functions-and-graphs",
         active: false,
+        subjectSlug: "mathematics",
         subtopics: [
             {title: "Introduction to functions", slug: "introduction-to-functions", active: false},
             {title: "Graphical representation", slug: "graphical-representation", active: false},
@@ -43,6 +47,7 @@ export const chapters = [
         title: "Statistics and Probability",
         slug: "statistics-and-probability",
         active: false,
+        subjectSlug: "mathematics",
         subtopics: [
             {title: "Data analysis", slug: "data-analysis", active: false},
             {title: "Probability theory", slug: "probability-theory", active: false},
@@ -53,6 +58,7 @@ export const chapters = [
         title: "Pre-Calculus",
         slug: "pre-calculus",
         active: false,
+        subjectSlug: "mathematics",
         subtopics: [
             {
                 title: "Exponential and logarithmic functions",
@@ -67,6 +73,7 @@ export const chapters = [
         title: "Calculus",
         slug: "calculus",
         active: false,
+        subjectSlug: "mathematics",
         subtopics: [
             {title: "Differentiation", slug: "differentiation", active: false},
             {title: "Integration", slug: "integration", active: false},
@@ -77,6 +84,7 @@ export const chapters = [
         title: "Applied Mathematics",
         slug: "applied-mathematics",
         active: false,
+        subjectSlug: "mathematics",
         subtopics: [
             {title: "Financial mathematics", slug: "financial-mathematics", active: false},
             {title: "Modeling with equations", slug: "modeling-with-equations", active: false},
@@ -87,6 +95,7 @@ export const chapters = [
         title: "Mathematical Problem Solving",
         slug: "mathematical-problem-solving",
         active: false,
+        subjectSlug: "mathematics",
         subtopics: [
             {title: "Problem-solving strategies", slug: "problem-solving-strategies", active: false},
             {title: "Mathematical reasoning", slug: "mathematical-reasoning", active: false},
@@ -97,6 +106,7 @@ export const chapters = [
         title: "Mathematical Tools",
         slug: "mathematical-tools",
         active: false,
+        subjectSlug: "mathematics",
         subtopics: [
             {title: "Theorems and proofs", slug: "theorems-and-proofs", active: false},
             {title: "Mathematical notation", slug: "mathematical-notation", active: false},
