@@ -1,10 +1,6 @@
 "use client"
 
-import Image from 'next/image'
-import styles from './page.module.css'
 import Link from "next/link";
-import {useAppDispatch, useAppSelector} from "@/redux/hooks";
-import {decrement, increment, reset} from "@/redux/features/counter/counterSlice";
 import {GithubOutlined} from "@ant-design/icons";
 import styled from "styled-components";
 
@@ -22,8 +18,7 @@ const StyledContainer = styled.div`
 `
 
 export default function Home() {
-    const count = useAppSelector((state) => state.counterReducer.value)
-    const dispatch = useAppDispatch()
+
     return (
         <main style={{
             textAlign: 'center'
@@ -153,7 +148,7 @@ export default function Home() {
                         Environment
                     </p></b>
                 </Link>
-                <Link href={'/showcase/eye-tracking'}>
+                <Link href={'/showcase/gaze'}>
                     <b><p>
                         An exhibition showcasing cutting-edge AI technologies in iris movement recognition:
                         Eye Tracking

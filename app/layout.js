@@ -67,7 +67,7 @@ export default function RootLayout({children}) {
                         <SubMenu title={'Showcase'}>
                             <Menu.Item key={'showcase-1'}><Link href={'/showcase/engagement-analytics'}>Engagement Analytics</Link></Menu.Item>
                             <Menu.Item key={'showcase-2'}><Link href={'/showcase/environment'}>Environment</Link></Menu.Item>
-                            <Menu.Item key={'showcase-3'}><Link href={'/showcase/eye-tracking'}>Eye Tracking</Link></Menu.Item>
+                            <Menu.Item key={'showcase-3'}><Link href={'/showcase/gaze'}>Eye Tracking</Link></Menu.Item>
 
 
                             <Menu.Item key={'teaching'}><Link href={'/subjects/math/chapter/ch1'}>Teaching Demo</Link></Menu.Item>
