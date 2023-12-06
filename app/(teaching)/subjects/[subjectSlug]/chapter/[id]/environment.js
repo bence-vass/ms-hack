@@ -41,9 +41,8 @@ const SubtitleDiv = styled.div`
 const subtitleWindows = slicingWindows(subtitle, 5)
 
 
-function Environment({isFlip, isSubtitle, domEnv}) {
+function Environment({isFlip, isSubtitle, domEnv, onEndedFn=null, }) {
     let i = 0
-
 
 
     const [subCoords, setSubCoords] = useState({x: 0, y: 0})
@@ -163,10 +162,8 @@ function Environment({isFlip, isSubtitle, domEnv}) {
                     autoPlay={true}
                     muted={isMute}
                     src={subject_videos[0].url}
-                    onEnded={() => {
-                        router.push('/quiz')
-                    }}
-
+                    onEnded={onEndedFn}
+                    loop={!onEndedFn}
 
                 >
                     {currentSubjectVideoSrc ? <source src={currentSubjectVideoSrc} type={'video/mp4'}/> : null}

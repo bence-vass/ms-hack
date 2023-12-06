@@ -21,6 +21,7 @@ import {
 } from "@ant-design/icons";
 import Environment from "@/app/(teaching)/subjects/[subjectSlug]/chapter/[id]/environment";
 import {measureEngagement} from "@/utils/measure-engagement";
+import {router} from "next/client";
 
 
 function loadWebgazerScript(setState) {
@@ -106,19 +107,18 @@ function Page({params}) {
     useEffect(() => {
 
 
-
         if (webgazerReady && !webgazerPause) {
-            const envDesc = describeEnvironment(envRefParent)
-
             const interval = setInterval(() => {
                 window.webgazer.getCurrentPrediction().then(res => {
+                    console.log(isFlip)
+                    let envDesc = describeEnvironment(envRefParent, isFlip)
                     if (res.x && res.y) {
                         const roundUpTo = 50
                         setCoords({
                             x: Math.ceil(res.x / roundUpTo) * roundUpTo,
                             y: Math.ceil(res.y / roundUpTo) * roundUpTo
                         })
-
+                        console.log(envDesc)
                         actionHandler(envDesc, {x: res.x, y: res.y})
                     }
                 })
@@ -127,10 +127,11 @@ function Page({params}) {
                 clearInterval(interval)
             }
         }
-    }, [webgazerReady, webgazerPause]);
+    }, [webgazerReady, webgazerPause, isFlip]);
 
 
     const envRefParent = useRef(null)
+
     function actionHandler(env, userInput) {
         let actions
         [, , , , actions] = measureEngagement(
@@ -156,14 +157,14 @@ function Page({params}) {
     }
 
 
-    function describeEnvironment(element) {
+    function describeEnvironment(element, flip = false) {
         return Object.values(element.current.children).map((v, i) => {
             const rect = v.getBoundingClientRect()
             let type = null
             if (v.id === 'overflow') {
-                type = 'overflow'
+                type = flip ? 'subject' : 'overflow'
             } else if (v.id === 'subject') {
-                type = 'subject'
+                type = flip ? 'overflow' : 'subject'
             }
             return {
                 id: v.id,
@@ -201,6 +202,7 @@ function Page({params}) {
 
     }
 
+
     if (!webgazerReady) {
         return (<div style={{
             position: 'relative',
@@ -225,7 +227,7 @@ function Page({params}) {
             display: 'flex',
             flexDirection: 'column',
         }}>
-{/*
+            {/*
             <button onClick={pauseResume}>{webgazerPause ? 'Resume' : 'Pause'}</button>
 */}
 
@@ -296,7 +298,13 @@ function Page({params}) {
             /> : null}
 
 
-            <Environment isFlip={isFlip} isSubtitle={isSubtitle} domEnv={envRefParent}/>
+            <Environment isFlip={isFlip}
+                         isSubtitle={isSubtitle}
+                         domEnv={envRefParent}
+                         onEndedFn={() => {
+                             router.push('/quiz')
+                         }}
+            />
 
 
         </div>
