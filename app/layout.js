@@ -69,23 +69,7 @@ export default function RootLayout({children}) {
                     </Menu>
                 </Header>
                 <Layout>
-                    <Sider
-                        width={200}
-                        style={{
-                            background: colorBgContainer,
-                        }}
-                    >
-                        <Menu
-                            mode="inline"
-                            defaultSelectedKeys={['1']}
-                            defaultOpenKeys={['sub1']}
-                            style={{
-                                height: '100%',
-                                borderRight: 0,
-                            }}
-                            items={items2}
-                        />
-                    </Sider>
+                    
                     <Layout
                         style={{
                             padding: '0 24px 24px',

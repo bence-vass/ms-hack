@@ -38,41 +38,20 @@ const SubtitleDiv = styled.div`
 `
 const subtitleWindows = slicingWindows(subtitle, 5)
 
-const ButtonContainer = styled.div`
-  display: flex;
-  gap: 10px;
-  justify-content: center;
-  margin-top: 10px;
-`;
-
-const Button = styled.button`
-  background-color: #1890ff;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  padding: 8px 16px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-
-  &:hover {
-    background-color: #096dd9;
-  }
-`;
-
 
 function Environment({isFlip, isSubtitle, domEnv=useRef(null)}) {
     let i = 0
 
     //const domEnv = useRef(null)
 
-        const [subCoords, setSubCoords] = useState({x: 0, y: 0})
+    const [subCoords, setSubCoords] = useState({x: 0, y: 0})
     const [currentSub, setCurrentSub] = useState('Some subscript')
     const [currentOverflowVideoSrc, setCurrentOverflowVideoSrc] = useState()
     const [currentSubjectVideoSrc, setCurrentSubjectVideoSrc] = useState()
     const videoPlayerOverflow = useRef(null)
     const videoPlayerSubject = useRef(null)
-const [isMute, setIsMute] = useState(true)
-
+    const [isMute, setIsMute] = useState(true)
+    const router = useRouter()
 
     function getNextVideo(list) {
         const rand = Math.floor(Math.random() * list.length)
@@ -111,7 +90,7 @@ const [isMute, setIsMute] = useState(true)
 
         return () => {
             clearInterval(interval)
-window.removeEventListener('focus', toogleMute)
+            window.removeEventListener('focus', toogleMute)
 
         }
 
@@ -119,7 +98,7 @@ window.removeEventListener('focus', toogleMute)
 
 
     function flipContainers() {
-                const rect = domEnv.current.children['overflow'].getBoundingClientRect()
+        const rect = domEnv.current.children['overflow'].getBoundingClientRect()
         if (isFlip) {
             setSubCoords({
                 x: rect.x + (rect.right - rect.left) * (3 / 2),
@@ -139,67 +118,6 @@ window.removeEventListener('focus', toogleMute)
     }, [isFlip]);
 
 
-    return (
-        <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
-          <h1>Environment Showcase</h1>
-            <ButtonContainer>
-            <Button onClick={() => flipContainers()}>
-              {isFlip ? "Flip back" : "Flip"}
-            </Button>
-            <Button onClick={() => toggleSub()}>
-              {showSub ? "Hide sub" : "Show sub"}
-            </Button>
-          </ButtonContainer>
-    
-          <SubtitleDiv
-            id={"subscript"}
-            style={{
-              left: subCoords.x,
-              top: subCoords.y,
-              display: showSub ? "block" : "none",
-            }}
-          >
-            <p dangerouslySetInnerHTML={{ __html: currentSub }}></p>
-          </SubtitleDiv>
-    
-          <Row ref={domEnv} style={{ height: "100%" }}>
-            <Col span={12} id={"overflow"} style={{ padding: 0 }}>
-              <CustomVideo
-                negativeTranslate={false}
-                isFlip={isFlip}
-                ref={videoPlayerOverflow}
-                controls={false}
-                autoPlay={true}
-                muted={true}
-                onEnded={() => {
-                  setCurrentOverflowVideoSrc(getNextVideo(overflow_videos));
-                  videoPlayerOverflow.current.load();
-                  videoPlayerOverflow.current.play();
-                }}
-              >
-                {currentOverflowVideoSrc ? (
-                  <source src={currentOverflowVideoSrc} type={"video/mp4"} />
-                ) : null}
-              </CustomVideo>
-            </Col>
-            <Col span={12} id={"subject"}>
-              <CustomVideo
-                negativeTranslate={true}
-                isFlip={isFlip}
-                ref={videoPlayerSubject}
-                controls={false}
-                autoPlay={true}
-                muted={true}
-                onEnded={() => {
-                  setCurrentSubjectVideoSrc(getNextVideo(overflow_videos));
-                  videoPlayerSubject.current.load();
-                  videoPlayerSubject.current.play();
-                }}
-              >
-                {currentSubjectVideoSrc ? (
-                  <source src={currentSubjectVideoSrc} type={"video/mp4"} />
-                ) : null}
-              </CustomVideo>
 
     return (<div style={{
         display: 'flex',
@@ -251,11 +169,11 @@ window.removeEventListener('focus', toogleMute)
                 >
                     {currentSubjectVideoSrc ? <source src={currentSubjectVideoSrc} type={'video/mp4'}/> : null}
                 </CustomVideo>
-
             </Col>
-          </Row>
-        </div>
-      );
+        </Row>
+
+
+    </div>)
 }
 
 export default Environment

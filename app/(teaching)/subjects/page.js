@@ -8,17 +8,17 @@ import { usePathname } from "next/navigation";
 import CustomLink from "@/ui/custom-link";
 
 const StyledAntdCol = styled(Col)`
-  width: 20%;
+  width: 40%;
   height: 20vh;
   justify-content: center;
   text-align: center;
-  padding: 2vw;
+  padding: 0vw;
   margin-bottom: 1vw;
-  color: #49194F;
+  color: #49194f;
   border-radius: 20px;
 
   a {
-    color: #49194F !important;
+    color: #49194f !important;
   }
 
   .contentWrapper {
@@ -26,60 +26,81 @@ const StyledAntdCol = styled(Col)`
     height: 100%;
     padding: 1.7vw;
     position: relative;
-    transition-duration: 350ms;
-    transition-timing-function: ease-in-out;
+    transition: transform 350ms ease-in-out;
     filter: grayscale(0);
+
+    &:hover {
+      transform: scale(1.2);
+    }
   }
 
   &:hover {
-    transform: scale(1.2);
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
   }
 
   .contentWrapper:hover {
-    transform: scale(1.2);
     z-index: 99;
-    filter: grayscale(${props => props.active ? 0 : 1});
+    filter: grayscale(${props => (props.active ? 0 : 1)});
+    transform: scale(1.1);
   }
 
   h3 {
     margin-top: 1.2rem;
-    font-size: medium; /* Adjusted font size to fit within the smaller card */
+    font-size: medium;
+  }
+
+  @media (max-width: 1200px) {
+    width: 25%;
+  }
+
+  @media (max-width: 992px) {
+    width: 33.33%;
+  }
+
+  @media (max-width: 768px) {
+    width: 50%;
+  }
+
+  @media (max-width: 576px) {
+    width: 100%;
   }
 `;
 
-function Page(props) {
-  const current_path = usePathname();
-  const colCount = 4;
-  const cols = [];
+const ImageWrapper = styled.div`
+  position: relative;
+  height: 80%;
+  width: 100%;
+  max-width: 100%;
 
-  for (let i = 0; i < subjects.length; i++) {
-    console.log(i, subjects[i].name);
-    cols.push(
-      <StyledAntdCol key={i} span={24 / colCount} active={subjects[i].active}>
-        <CustomLink href={current_path + '/' + subjects[i].slug} active={subjects[i].active}>
-          <div className={'contentWrapper'}>
-          
-            <div style={{
-              position: 'relative',
-              height: '100%',
-              width: '100%',
-            }}>
-              <Image src={subjects[i].img} alt={subjects[i].name} fill={true}/>
-            </div>
-            <h3>{subjects[i].name}</h3>
-            </div>
-        </CustomLink>
-      </StyledAntdCol>
-    );
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 8px;
+    max-width: 100%;
   }
+`;
+
+function Page() {
+  const currentPath = usePathname();
+  const colCount = 4;
+  const cols = subjects.map((subject, index) => (
+    <StyledAntdCol key={index} span={24 / colCount} active={subject.active}>
+      <CustomLink href={`${currentPath}/${subject.slug}`} active={subject.active}>
+        <div className="contentWrapper">
+          <ImageWrapper>
+            <Image src={subject.img} alt={subject.name} fill />
+          </ImageWrapper>
+          <h3>{subject.name}</h3>
+        </div>
+      </CustomLink>
+    </StyledAntdCol>
+  ));
 
   return (
     <div>
       <h1>Subjects</h1>
-      <Row gutter={[3, colCount]}>
-        {cols}
-      </Row>
+      <Row gutter={[3, colCount]}>{cols}</Row>
     </div>
   );
 }
