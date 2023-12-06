@@ -6,10 +6,10 @@ export default function EyeTrackingCursor({coords, pause}) {
         width: 100,
         height: 100,
         borderRadius: '50%',
-        backgroundColor: '#21867f',
+        backgroundColor: '#862121',
         position: 'absolute',
-        opacity: 0.3,
-        boxShadow: "0 0 10px 20px #21867f",
+        opacity: 0.4,
+        boxShadow: "0 0 10px 20px #862121",
     }
     if (pause || (coords.x == null && coords.y == null)) {
         return null

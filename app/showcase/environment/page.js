@@ -191,7 +191,7 @@ function Page(){
 
     const [isSubtitle, setIsSubtitle] = useState(false)
     const [isFlip, setIsFlip] = useState(false)
-
+    const parentDomRef = useRef(null)
 
 
     return(<div style={{
@@ -203,7 +203,7 @@ function Page(){
 
 
 
-        <Environment isFlip={isFlip} isSubtitle={isSubtitle}/>
+        <Environment isFlip={isFlip} isSubtitle={isSubtitle} domEnv={parentDomRef}/>
 
 
 

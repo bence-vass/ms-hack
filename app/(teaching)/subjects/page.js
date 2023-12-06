@@ -53,7 +53,6 @@ function Page(props) {
     const colCount = 4
     const cols = []
     for (let i = 0; i < subjects.length; i++) {
-        console.log(i, subjects[i].name)
         cols.push(
             <StyledAntdCol key={i} span={24 / colCount} active={subjects[i].active}>
                 <CustomLink href={current_path + '/' + subjects[i].slug} active={subjects[i].active}>

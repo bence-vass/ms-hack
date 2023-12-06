@@ -18,6 +18,7 @@ import {Breadcrumb, Layout, Menu, theme, Button} from 'antd';
 import Link from "next/link";
 import {usePathname, useRouter, useSelectedLayoutSegment} from "next/navigation";
 import {AddressBar} from "@/ui/address-bar";
+import SubMenu from "antd/es/menu/SubMenu";
 
 const {Header, Content, Sider} = Layout;
 
@@ -56,42 +57,32 @@ export default function RootLayout({children}) {
                         alignItems: 'center',
                     }}
                 >
-                    <div className="demo-logo" style={{color: '#fff'}}>MS Hack</div>
-                    <Menu theme="dark" mode="horizontal" defaultSelectedKeys={'home'} style={{
+                    <div className="demo-logo" style={{color: '#fff', marginRight: 15}}>ELEXAM</div>
+                    <Menu theme="dark" mode="horizontal"style={{
                         minWidth: 800,
                     }}>
                         <Menu.Item key={'home'}><Link href={'/'}>Home</Link></Menu.Item>
                         <Menu.Item key={'subjects'}><Link href={'/subjects'}>Subjects</Link></Menu.Item>
                         <Menu.Item key={'books'}><Link href={'/books'}>Books</Link></Menu.Item>
-                        <Menu.Item key={'quiz'}><Link href={'/quiz'}>Quiz</Link></Menu.Item>
-                        <Menu.Item key={'teaching'}><Link href={'/subjects/math/chapter/ch1'}>Teaching Demo</Link></Menu.Item>
-                        <Menu.Item key={'showcase-1'}><Link href={'/showcase/engagement-analytics'}>engagement analytics</Link></Menu.Item>
+                        <SubMenu title={'Showcase'}>
+                            <Menu.Item key={'showcase-1'}><Link href={'/showcase/engagement-analytics'}>Engagement Analytics</Link></Menu.Item>
+                            <Menu.Item key={'showcase-2'}><Link href={'/showcase/environment'}>Environment</Link></Menu.Item>
+                            <Menu.Item key={'showcase-2'}><Link href={'/showcase/eyetracking'}>Eye Tracking</Link></Menu.Item>
+
+
+                            <Menu.Item key={'teaching'}><Link href={'/subjects/math/chapter/ch1'}>Teaching Demo</Link></Menu.Item>
+
+                        </SubMenu>
+
                     </Menu>
                 </Header>
                 <Layout>
-                    <Sider
-                        width={200}
-                        style={{
-                            background: colorBgContainer,
-                        }}
-                    >
-                        <Menu
-                            mode="inline"
-                            defaultSelectedKeys={['1']}
-                            defaultOpenKeys={['sub1']}
-                            style={{
-                                height: '100%',
-                                borderRight: 0,
-                            }}
-                            items={items2}
-                        />
-                    </Sider>
+                    <Sider width={0}/>
                     <Layout
                         style={{
-                            padding: '0 24px 24px',
+                            padding: '24px',
                         }}
                     >
-                        <AddressBar/>
                         <Content
                             style={{
                                 padding: 0,

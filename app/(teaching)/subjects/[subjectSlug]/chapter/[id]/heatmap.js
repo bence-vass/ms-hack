@@ -7,7 +7,7 @@ import {resetData, setData} from "@/redux/features/heatmap/heatmapSlice";
 
 const HeatmapComponent = ({newDataPoints}) => {
     const dispatch = useAppDispatch()
-    const heatmapData = useAppSelector(state => state.heatmapReducer.data)
+    //const heatmapData = useAppSelector(state => state.heatmapReducer.data)
 
     const [heatmapInstance, setHeatmapInstance] = useState(null)
 
