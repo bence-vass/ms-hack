@@ -99,10 +99,10 @@ export default function Home() {
                 </p>
 
 
-                <h3>Accomplishments that we're proud of</h3>
+                <h3>Accomplishments that we&lsquo;re proud of</h3>
                 <p>
                     Our teaching Demo speaks for itself. It is responsive, and modern approach to showcase,
-                    how can we engage younger generation's attention spam problems. By using our heatmap as the basis of
+                    how can we engage younger generation&lsquo;s attention spam problems. By using our heatmap as the basis of
                     the engagement feedback, we can customize the learning experience for the different learning styles
                     that
                     fits the best our students.
@@ -115,12 +115,12 @@ export default function Home() {
                     is the palette of available tools provided by Microsoft.
                 </p>
 
-                <h3>What's next for ELEXAM</h3>
+                <h3>What&lsquo;s next for ELEXAM</h3>
                 <p>
                     We would like to
                     automate the whole functioning of the website. - using generative AI to create content, - automate
                     the
-                    functioning, so the student doesn't feel overwhelmed by the learning process, - make it available
+                    functioning, so the student doesn&lsquo;t feel overwhelmed by the learning process, - make it available
                     for
                     teachers, to help use it as a teaching aid.
                 </p>
@@ -153,7 +153,7 @@ export default function Home() {
                         Environment
                     </p></b>
                 </Link>
-                <Link href={'/showcase/eyetracking'}>
+                <Link href={'/showcase/eye-tracking'}>
                     <b><p>
                         An exhibition showcasing cutting-edge AI technologies in iris movement recognition:
                         Eye Tracking

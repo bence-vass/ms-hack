@@ -1,21 +1,37 @@
-"use client"
+'use client'
 import React, {useEffect, useState} from "react";
 import {checkIsCamApproved, requestCamApprove} from "@/ui/webcam-permission";
-import {
-    FloatingControl,
-    SpinContainer
-} from "@/app/(teaching)/subjects/[subjectSlug]/chapter/[id]/custom-styled-components";
-import {FloatButton, Spin} from "antd";
+import {SpinContainer} from "@/app/(teaching)/subjects/[subjectSlug]/chapter/[id]/custom-styled-components";
+import {Modal, Spin} from "antd";
 import {LoadingOutlined} from "@ant-design/icons";
-import HeatmapComponent from "@/app/(teaching)/subjects/[subjectSlug]/chapter/[id]/heatmap";
 import EyeTrackingCursor from "@/app/(teaching)/subjects/[subjectSlug]/chapter/[id]/eyetracking";
-import {resetData} from "@/redux/features/heatmap/heatmapSlice";
-import Environment from "@/app/(teaching)/subjects/[subjectSlug]/chapter/[id]/environment";
-import {router} from "next/client";
-import {CamWarningModal} from "@/app/(teaching)/subjects/[subjectSlug]/chapter/[id]/page";
 import styled from "styled-components";
 
-function Page() {
+
+
+const CalibrationDots = styled.div`
+  background-color: black;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  position: absolute;
+`
+
+function CamWarningModal({isOpen, onOkFn, onCancelFn, okText, cancelText}) {
+
+    return (<Modal title={'No cam waring'}
+                   open={isOpen}
+                   onOk={onOkFn}
+                   okText={okText}
+                   onCancel={onCancelFn}
+                   cancelText={cancelText}
+    >
+        <p>No cam permission</p>
+
+    </Modal>)
+}
+
+function Page(props) {
 
     const [webgazerScriptLoaded, setWebgazerScriptLoaded] = useState(false)
     const [camApproved, setCamApproved] = useState(false)
@@ -187,13 +203,5 @@ function Page() {
     </div>)
 }
 
-
-const CalibrationDots = styled.div`
-  background-color: black;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  position: absolute;
-`
 
 export default Page

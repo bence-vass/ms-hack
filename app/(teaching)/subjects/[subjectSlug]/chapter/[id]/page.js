@@ -313,7 +313,7 @@ function Page({params}) {
 
 export default Page;
 
-export function CamWarningModal({isOpen, onOkFn, onCancelFn, okText, cancelText}) {
+function CamWarningModal({isOpen, onOkFn, onCancelFn, okText, cancelText}) {
 
     return (<Modal title={'No cam waring'}
                    open={isOpen}
